@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3/usr/src/ion-controller/mytoncore.py
 # -*- coding: utf_8 -*-
 
 import pwd
