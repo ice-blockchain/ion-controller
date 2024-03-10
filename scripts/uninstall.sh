@@ -33,7 +33,7 @@ rm -rf /var/ton-work
 rm -rf /var/ton-dht-server
 rm -rf /tmp/myton*
 rm -rf /usr/local/bin/mytoninstaller/
-rm -rf /usr/local/bin/mytoncore/mytoncore.db
+rm -rf /usr/local/bin/mytoncore
 rm -rf /home/${user}/.local/share/mytonctrl
 rm -rf /home/${user}/.local/share/mytoncore/mytoncore.db
 

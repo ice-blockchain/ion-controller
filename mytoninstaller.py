@@ -419,6 +419,20 @@ def EnableValidatorConsole():
 	client_pubkey = client_key + ".pub"
 	server_pubkey = server_key + ".pub"
 
+	local.add_log("user: " + user, "debug")
+	local.add_log("vuser: " + vuser, "debug")
+	local.add_log("cport: " + str(cport), "debug")
+	local.add_log("src_dir: " + src_dir, "debug")
+	local.add_log("ton_db_dir: " + ton_db_dir, "debug")
+	local.add_log("ton_bin_dir: " + ton_bin_dir, "debug")
+	local.add_log("vconfig_path: " + vconfig_path, "debug")
+	local.add_log("generate_random_id: " + generate_random_id, "debug")
+	local.add_log("keys_dir: " + keys_dir, "debug")
+	local.add_log("client_key: " + client_key, "debug")
+	local.add_log("server_key: " + server_key, "debug")
+	local.add_log("client_pubkey: " + client_pubkey, "debug")
+	local.add_log("server_pubkey: " + server_pubkey, "debug")
+
 	# Check if key exist
 	if os.path.isfile(server_key) or os.path.isfile(client_key):
 		local.add_log("Server or client key already exist. Break EnableValidatorConsole fuction", "warning")
@@ -604,6 +618,7 @@ def StartMytoncore():
 
 def GetConfig(**kwargs):
 	path = kwargs.get("path")
+	local.add_log("Get config from file: " + path, "debug")
 	file = open(path, 'rt')
 	text = file.read()
 	file.close()
