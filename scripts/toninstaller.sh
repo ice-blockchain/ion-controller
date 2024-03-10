@@ -133,7 +133,7 @@ cd $SOURCES_DIR
 rm -rf $SOURCES_DIR/ice-open-network
 rm -rf $SOURCES_DIR/ion-controller
 git clone --recursive https://github.com/ice-blockchain/ice-open-network
-git clone --recursive https://github.com/ice-blockchain/ion-controller
+git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller
 git config --global --add safe.directory $SOURCES_DIR/ice-open-network
 git config --global --add safe.directory $SOURCES_DIR/ion-controller
 
