@@ -53,7 +53,7 @@ def Refresh():
 	src_dir = "/usr/src/"
 	ton_work_dir = "/var/ton-work/"
 	ton_bin_dir = bin_dir + "ton/"
-	ton_src_dir = src_dir + "ton/"
+	ton_src_dir = src_dir + "ion-open-network/"
 	local.buffer.bin_dir = bin_dir
 	local.buffer.src_dir = src_dir
 	local.buffer.ton_work_dir = ton_work_dir
@@ -188,9 +188,11 @@ def Event(name):
 	if name == "drvcf":
 		DangerousRecoveryValidatorConfigFile()
 	if name == "enableJR":
-		EnableJsonRpc()
+		print("Enable enableJR not supported yet by ion-controller")
+		#EnableJsonRpc()
 	if name == "enablePT":
-		EnablePytonv3()
+		print("Enable pyTONv3 not supported yet by ion-controller")
+		#EnablePytonv3()
 	if name == "clc":
 		ix = sys.argv.index("-i")
 		initBlock_b64 = sys.argv[ix+1]
@@ -208,18 +210,19 @@ def General():
 		ex = sys.argv.index("-e")
 		name = sys.argv[ex+1]
 		Event(name)
+	if "-t" in sys.argv:
+		print("telemetry functionality not supported yet by ion-controller")
+		#mx = sys.argv.index("-t")
+		#telemetry = sys.argv[mx+1]
+		#local.buffer.telemetry = Str2Bool(telemetry)
+	if "--dump" in sys.argv:
+		print("dump functionality not supported yet by ion-controller")
+		#mx = sys.argv.index("--dump")
+		#dump = sys.argv[mx+1]
+		#local.buffer.dump = Str2Bool(dump)
 	if "-m" in sys.argv:
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
-	if "-t" in sys.argv:
-		mx = sys.argv.index("-t")
-		telemetry = sys.argv[mx+1]
-		local.buffer.telemetry = Str2Bool(telemetry)
-	if "--dump" in sys.argv:
-		mx = sys.argv.index("--dump")
-		dump = sys.argv[mx+1]
-		local.buffer.dump = Str2Bool(dump)
-	#end if
 
 		# Создать настройки для mytoncore.py
 		FirstMytoncoreSettings()
@@ -295,7 +298,7 @@ def FirstNodeSettings():
 	subprocess.run(args)
 
 	# Скачать дамп
-	DownloadDump()
+	#DownloadDump()
 
 	# chown 1
 	local.add_log("Chown ton-work dir", "debug")
@@ -336,7 +339,7 @@ def FirstMytoncoreSettings():
 	user = local.buffer.user
 
 	# Прописать mytoncore.py в автозагрузку
-	add2systemd(name="mytoncore", user=user, start="/usr/bin/python3 /usr/src/mytonctrl/mytoncore.py")
+	add2systemd(name="mytoncore", user=user, start="/usr/bin/python3 /usr/src/ion-controller/mytoncore.py")
 
 	# Проверить конфигурацию
 	path = "/home/{user}/.local/share/mytoncore/mytoncore.db".format(user=user)
@@ -486,7 +489,7 @@ def EnableValidatorConsole():
 	SetConfig(path=mconfig_path, data=mconfig)
 
 	# Подтянуть событие в mytoncore.py
-	cmd = "python3 {src_dir}mytonctrl/mytoncore.py -e \"enableVC\"".format(src_dir=src_dir)
+	cmd = "python3 {src_dir}ion-controller/mytoncore.py -e \"enableVC\"".format(src_dir=src_dir)
 	args = ["su", "-l", user, "-c", cmd]
 	subprocess.run(args)
 
@@ -889,7 +892,7 @@ def CreateSymlinks():
 	validator_console_file = "/usr/bin/validator-console"
 	env_file = "/etc/environment"
 	file = open(mytonctrl_file, 'wt')
-	file.write("/usr/bin/python3 /usr/src/mytonctrl/mytonctrl.py $@")
+	file.write("/usr/bin/python3 /usr/src/ion-controller/mytonctrl.py $@")
 	file.close()
 	file = open(fift_file, 'wt')
 	file.write("/usr/bin/ton/crypto/fift $@")
@@ -907,7 +910,7 @@ def CreateSymlinks():
 	subprocess.run(args)
 
 	# env
-	fiftpath = "export FIFTPATH=/usr/src/ton/crypto/fift/lib/:/usr/src/ton/crypto/smartcont/"
+	fiftpath = "export FIFTPATH=/usr/src/ion-open-network/crypto/fift/lib/:/usr/src/ion-open-network/crypto/smartcont/"
 	file = open(env_file, 'rt+')
 	text = file.read()
 	if fiftpath not in text:
@@ -981,7 +984,7 @@ def SetWebPassword(args):
 def EnableJsonRpc():
 	local.add_log("start EnableJsonRpc function", "debug")
 	user = local.buffer.user
-	exitCode = run_as_root(["bash", "/usr/src/mytonctrl/scripts/jsonrpcinstaller.sh", "-u", user])
+	exitCode = run_as_root(["bash", "/usr/src/ion-controller/scripts/jsonrpcinstaller.sh", "-u", user])
 	if exitCode == 0:
 		text = "EnableJsonRpc - {green}OK{endc}"
 	else:
@@ -992,7 +995,7 @@ def EnableJsonRpc():
 def EnablePytonv3():
 	local.add_log("start EnablePytonv3 function", "debug")
 	user = local.buffer.user
-	exitCode = run_as_root(["bash", "/usr/src/mytonctrl/scripts/pytonv3installer.sh", "-u", user])
+	exitCode = run_as_root(["bash", "/usr/src/ion-controller/scripts/pytonv3installer.sh", "-u", user])
 	if exitCode == 0:
 		text = "EnablePytonv3 - {green}OK{endc}"
 	else:
