@@ -128,11 +128,10 @@ def check_vport():
 		color_print(local.translate("vport_error"))
 #end define
 
-def check_git(input_args, default_repo, text):
+def check_git(input_args, default_repo, default_branch, text):
 	src_dir = "/usr/src"
 	git_path = f"{src_dir}/{default_repo}"
 	default_author = "ion-blockchain"
-	default_branch = "ion-fork"
 	
 	# Get author, repo, branch
 	local_author, local_repo = get_git_author_and_repo(git_path)
@@ -185,8 +184,8 @@ def GetAuthorRepoBranchFromArgs(args):
 #end define
 
 def Update(args):
-	repo = "mytonctrl"
-	author, repo, branch = check_git(args, repo, "update")
+	repo = "ion-controller"
+	author, repo, branch = check_git(args, repo, "ion-fork", "update")
 
 	# Run script
 	runArgs = ["bash", "/usr/src/ion-controller/scripts/update.sh", "-a", author, "-r", repo, "-b", branch]
@@ -200,8 +199,8 @@ def Update(args):
 #end define
 
 def Upgrade(args):
-	repo = "ton"
-	author, repo, branch = check_git(args, repo, "upgrade")
+	repo = "ion-open-network"
+	author, repo, branch = check_git(args, repo,"master", "upgrade")
 	
 	# bugfix if the files are in the wrong place
 	liteClient = ton.GetSettings("liteClient")
@@ -222,9 +221,9 @@ def Upgrade(args):
 	ton.SetSettings("validatorConsole", validatorConsole)
 	
 	# Run script
-	runArgs = ["bash", "/usr/src/mytonctrl/scripts/upgrade.sh", "-a", author, "-r", repo, "-b", branch]
+	runArgs = ["bash", "/usr/src/ion-controller/scripts/upgrade.sh", "-a", author, "-r", repo, "-b", branch]
 	exitCode = run_as_root(runArgs)
-	exitCode += run_as_root(["python3", "/usr/src/mytonctrl/scripts/upgrade.py"])
+	exitCode += run_as_root(["python3", "/usr/src/ion-controller/scripts/upgrade.py"])
 	if exitCode == 0:
 		text = "Upgrade - {green}OK{endc}"
 	else:
@@ -240,7 +239,7 @@ def CheckMytonctrlUpdate():
 #end define
 
 def CheckTonUpdate():
-	git_path = "/usr/src/ton"
+	git_path = "/usr/src/ion-open-network"
 	result = check_git_update(git_path)
 	if result is True:
 		color_print(local.translate("ton_update_available"))
@@ -419,8 +418,8 @@ def PrintLocalStatus(adnlAddr, validatorIndex, validatorEfficiency, validatorWal
 	dbStatus_text = local.translate("local_status_db").format(dbSize_text, dbUsage_text)
 	
 	# Mytonctrl and validator git hash
-	mtcGitPath = "/usr/src/mytonctrl"
-	validatorGitPath = "/usr/src/ton"
+	mtcGitPath = "/usr/src/ion-controller"
+	validatorGitPath = "/usr/src/ion-open-network"
 	validatorBinGitPath = "/usr/bin/ton/validator-engine/validator-engine"
 	mtcGitHash = get_git_hash(mtcGitPath, short=True)
 	validatorGitHash = GetBinGitHash(validatorBinGitPath, short=True)
@@ -1089,7 +1088,7 @@ def Xrestart(inputArgs):
 	if len(inputArgs) < 2:
 		color_print("{red}Bad args. Usage:{endc} xrestart <timestamp> <args>")
 		return
-	args = ["python3", "/usr/src/mytonctrl/scripts/xrestart.py"]
+	args = ["python3", "/usr/src/ion-controller/scripts/xrestart.py"]
 	args += inputArgs
 	exitCode = run_as_root(args)
 	if exitCode == 0:
