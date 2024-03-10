@@ -40,6 +40,7 @@ rm -rf /home/${user}/.local/share/mytoncore/mytoncore.db
 # Удаление ссылок
 rm -rf /usr/bin/fift
 rm -rf /usr/bin/liteclient
+rm -rf /usr/bin/lite-client
 rm -rf /usr/bin/validator-console
 rm -rf /usr/bin/mytonctrl
 
