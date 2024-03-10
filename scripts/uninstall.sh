@@ -26,8 +26,8 @@ rm -rf /etc/systemd/system/dht-server.service
 systemctl daemon-reload
 
 # Удаление файлов
-rm -rf /usr/src/ton
-rm -rf /usr/src/mytonctrl
+rm -rf /usr/src/ion-controller
+rm -rf /usr/src/ice-open-network
 rm -rf /usr/bin/ton
 rm -rf /var/ton-work
 rm -rf /var/ton-dht-server

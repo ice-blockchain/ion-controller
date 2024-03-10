@@ -8,8 +8,8 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Set default arguments
-author="ton-blockchain"
-repo="ton"
+author="ion-blockchain"
+repo="ion-open-network"
 branch="master"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
@@ -32,7 +32,7 @@ ENDC='\033[0m'
 apt-get install -y libsecp256k1-dev libsodium-dev ninja-build liblz4-dev libjemalloc-dev
 
 # bugfix if the files are in the wrong place
-wget "https://ton-blockchain.github.io/global.config.json" -O global.config.json
+wget "https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json" -O global.config.json
 if [ -f "/var/ton-work/keys/liteserver.pub" ]; then
     echo "Ok"
 else

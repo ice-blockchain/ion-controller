@@ -8,7 +8,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Get arguments
-config="https://ton-blockchain.github.io/global.config.json"
+config="https://raw.githubusercontent.com/github.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
 while getopts c: flag
 do
 	case "${flag}" in
@@ -63,14 +63,14 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
 	elif cat /etc/*release | grep ^NAME | grep Red ; then
 		echo "Red Hat Linux detected."
 		echo "This OS is not supported with this script at present. Sorry."
-		echo "Please refer to https://github.com/ton-blockchain/mytonctrl for setup information."
+		echo "Please refer to https://github.com/ice-blockchain/ion-controller/tree/ion-fork for setup information."
 		exit 1
 	
 	# Suse systems are not supported
 	elif [ -f /etc/SuSE-release ]; then
 		echo "Suse Linux detected."
 		echo "This OS is not supported with this script at present. Sorry."
-		echo "Please refer to https://github.com/ton-blockchain/mytonctrl for setup information."
+		echo "Please refer to https://github.com/ice-blockchain/ion-controller/tree/ion-fork for setup information."
 		exit 1
 
 	elif [ -f /etc/arch-release ]; then
@@ -92,7 +92,7 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
 	else
 		echo "Unknown Linux distribution."
 		echo "This OS is not supported with this script at present. Sorry."
-		echo "Please refer to https://github.com/ton-blockchain/mytonctrl for setup information."
+		echo "Please refer to https://github.com/ice-blockchain/ion-controller/tree/ion-fork for setup information."
 		exit 1
 	fi
 
@@ -130,12 +130,12 @@ pip3 install psutil fastcrc requests
 # Клонирование репозиториев с github.com
 echo -e "${COLOR}[2/6]${ENDC} Cloning github repository"
 cd $SOURCES_DIR
-rm -rf $SOURCES_DIR/ton
-rm -rf $SOURCES_DIR/mytonctrl
-git clone --recursive https://github.com/ton-blockchain/ton.git
-git clone --recursive https://github.com/ton-blockchain/mytonctrl.git
-git config --global --add safe.directory $SOURCES_DIR/ton
-git config --global --add safe.directory $SOURCES_DIR/mytonctrl
+rm -rf $SOURCES_DIR/ice-open-network
+rm -rf $SOURCES_DIR/ion-controller
+git clone --recursive https://github.com/ice-blockchain/ice-open-network
+git clone --recursive https://github.com/ice-blockchain/ion-controller
+git config --global --add safe.directory $SOURCES_DIR/ice-open-network
+git config --global --add safe.directory $SOURCES_DIR/ion-controller
 
 cd $BIN_DIR
 rm -rf openssl_3
@@ -167,12 +167,12 @@ fi
 if [[ "$OSTYPE" =~ darwin.* ]]; then
 	if [[ $(uname -p) == 'arm' ]]; then
 		echo M1
-		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ton -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev -GNinja
+		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ice-open-network -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev -GNinja
 	else
-		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ton -GNinja
+		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ice-open-network -GNinja
 	fi
 else
-	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ton -GNinja -DTON_USE_JEMALLOC=ON -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
+	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ice-open-network -GNinja -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
 fi
 
 # Компилируем из исходников

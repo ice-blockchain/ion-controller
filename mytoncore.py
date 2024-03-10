@@ -4190,7 +4190,7 @@ def Telemetry(ton):
 
 	# Get git hashes
 	gitHashes = dict()
-	gitHashes["mytonctrl"] = get_git_hash("/usr/src/mytonctrl")
+	gitHashes["mytonctrl"] = get_git_hash("/usr/src/ion-controller")
 	gitHashes["validator"] = GetBinGitHash("/usr/bin/ton/validator-engine/validator-engine")
 	data["gitHashes"] = gitHashes
 	data["stake"] = local.db.get("stake")
@@ -4200,10 +4200,10 @@ def Telemetry(ton):
 	data["fullnode_adnl"] = vconfig.fullnode
 
 	# Send data to toncenter server
-	liteUrl_default = "https://telemetry.toncenter.com/report_status"
-	liteUrl = local.db.get("telemetryLiteUrl", liteUrl_default)
-	output = json.dumps(data)
-	resp = requests.post(liteUrl, data=output, timeout=3)
+	#liteUrl_default = "https://telemetry.toncenter.com/report_status"
+	#liteUrl = local.db.get("telemetryLiteUrl", liteUrl_default)
+	#output = json.dumps(data)
+	#resp = requests.post(liteUrl, data=output, timeout=3)
 #end define
 
 def GetBinGitHash(path, short=False):
@@ -4234,10 +4234,10 @@ def OverlayTelemetry(ton):
 	data["overlaysStats"] = ton.GetOverlaysStats()
 
 	# Send data to toncenter server
-	overlayUrl_default = "https://telemetry.toncenter.com/report_overlays"
-	overlayUrl = local.db.get("overlayTelemetryUrl", overlayUrl_default)
-	output = json.dumps(data)
-	resp = requests.post(overlayUrl, data=output, timeout=3)
+	#overlayUrl_default = "https://telemetry.toncenter.com/report_overlays"
+	#overlayUrl = local.db.get("overlayTelemetryUrl", overlayUrl_default)
+	#output = json.dumps(data)
+	#resp = requests.post(overlayUrl, data=output, timeout=3)
 #end define
 
 def Complaints(ton):

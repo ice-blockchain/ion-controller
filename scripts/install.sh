@@ -23,7 +23,7 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
 fi
 
 # Get arguments
-config="https://ton-blockchain.github.io/global.config.json"
+config="https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
 telemetry=true
 ignore=false
 dump=false
@@ -86,11 +86,11 @@ file3=${BIN_DIR}/ton/validator-engine-console/validator-engine-console
 if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
 	echo "TON exist"
 	cd $SOURCES_DIR
-	rm -rf $SOURCES_DIR/mytonctrl
-	git clone --recursive https://github.com/ton-blockchain/mytonctrl.git
+	rm -rf $SOURCES_DIR/ion-controller
+	git clone --recursive https://github.com/ice-blockchain/ion-controller.git
 else
 	rm -f toninstaller.sh
-	wget https://raw.githubusercontent.com/ton-blockchain/mytonctrl/master/scripts/toninstaller.sh
+	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/toninstaller.sh
 	bash toninstaller.sh -c "${config}"
 	rm -f toninstaller.sh
 fi
@@ -102,7 +102,7 @@ user=$(whoami)
 if [ "$parent_name" = "sudo" ] || [ "$parent_name" = "su" ]; then
     user=$(logname)
 fi
-python3 ${SOURCES_DIR}/mytonctrl/mytoninstaller.py -m ${mode} -u ${user} -t ${telemetry} --dump ${dump}
+python3 ${SOURCES_DIR}/ion-controller/mytoninstaller.py -m ${mode} -u ${user} -t ${telemetry} --dump ${dump}
 
 # Выход из программы
 echo -e "${COLOR}[4/4]${ENDC} Mytonctrl installation completed"

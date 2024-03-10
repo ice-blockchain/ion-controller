@@ -3,7 +3,7 @@
 
 import sys
 import time
-sys.path.append("/usr/src/mytonctrl/")
+sys.path.append("/usr/src/ion-controller/")
 from mypylib.mypylib import bcolors, Sleep
 from mytoncore import MyTonCore
 from mypylib.mypylib import MyPyClass
