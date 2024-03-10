@@ -199,7 +199,7 @@ def Update(args):
 #end define
 
 def Upgrade(args):
-	repo = "ion-open-network"
+	repo = "ice-open-network"
 	author, repo, branch = check_git(args, repo,"master", "upgrade")
 	
 	# bugfix if the files are in the wrong place
@@ -239,7 +239,7 @@ def CheckMytonctrlUpdate():
 #end define
 
 def CheckTonUpdate():
-	git_path = "/usr/src/ion-open-network"
+	git_path = "/usr/src/ice-open-network"
 	result = check_git_update(git_path)
 	if result is True:
 		color_print(local.translate("ton_update_available"))
@@ -419,7 +419,7 @@ def PrintLocalStatus(adnlAddr, validatorIndex, validatorEfficiency, validatorWal
 	
 	# Mytonctrl and validator git hash
 	mtcGitPath = "/usr/src/ion-controller"
-	validatorGitPath = "/usr/src/ion-open-network"
+	validatorGitPath = "/usr/src/ice-open-network"
 	validatorBinGitPath = "/usr/bin/ton/validator-engine/validator-engine"
 	mtcGitHash = get_git_hash(mtcGitPath, short=True)
 	validatorGitHash = GetBinGitHash(validatorBinGitPath, short=True)
