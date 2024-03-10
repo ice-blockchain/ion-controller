@@ -9,7 +9,7 @@ fi
 
 # Set default arguments
 author="ion-blockchain"
-repo="ion-open-network"
+repo="ice-open-network"
 branch="master"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
