@@ -2,7 +2,7 @@
 # -*- coding: utf_8 -*-
 
 import sys
-sys.path.append("/usr/src/mytonctrl/")
+sys.path.append("/usr/src/ion-controller/")
 from mypylib.mypylib import bcolors, Sleep
 from mytoncore import MyTonCore, TonBlocksScanner
 

@@ -2,7 +2,7 @@
 # -*- coding: utf_8 -*-l
 
 from sys import path
-path.append("/usr/src/mytonctrl/")
+path.append("/usr/src/ion-controller/")
 from mytoncore import *
 
 Local = MyPyClass(__file__)

@@ -1,0 +1,63 @@
+{
+    "@type": "config.global",
+    "dht": {
+        "@type": "dht.config.global",
+        "k": 3,
+        "a": 3,
+        "static_nodes": {
+            "@type": "dht.nodes",
+            "nodes": [
+                {
+                    "@type": "dht.node",
+                    "id": {
+                        "@type": "pub.ed25519",
+                        "key": "SIK7PSABwhurX/lZ5dWyfGaUEBgP6qd5S9UqjwNgk9k="
+                    },
+                    "addr_list": {
+                        "@type": "adnl.addressList",
+                        "addrs": [
+                            {
+                                "@type": "adnl.address.udp",
+                                "ip": -649068924,
+                                "port": 6302
+                            }
+                        ],
+                        "version": 0,
+                        "reinit_date": 0,
+                        "priority": 0,
+                        "expire_at": 0
+                    },
+                    "version": -1,
+                    "signature": "YQnvpY+arVGZUuWxeuRvr6E0piSqr+k/kmOeU+JMnV0o8nqo6/I+tzaQtJA0ZKh1OKf+XO2S8nQ9JI9ivrCqCQ=="
+                }
+            ]
+        }
+    },
+    "validator": {
+        "@type": "validator.config.global",
+        "zero_state": {
+            "workchain": -1,
+            "shard": -9223372036854775808,
+            "seqno": 0,
+            "root_hash": "mus5nzNS3rDByRtSeskyWin78jcDD21fO46PH2OXXGQ=",
+            "file_hash": "J0E+Wqy/0rGm2IEPTGDDwkZTY1rvJRHyfCOIvXCYqaM="
+        },
+        "init_block": {
+            "workchain": -1,
+            "shard": -9223372036854775808,
+            "seqno": 0,
+            "root_hash": "mus5nzNS3rDByRtSeskyWin78jcDD21fO46PH2OXXGQ=",
+            "file_hash": "J0E+Wqy/0rGm2IEPTGDDwkZTY1rvJRHyfCOIvXCYqaM="
+        }
+    },
+    "liteservers": [
+        {
+            "id": {
+                "key": "oDPG6w/RG/CiwYu6bYOgPFxq4gDwKBNQfduwdbPBl1A=",
+                "@type": "pub.ed25519"
+            },
+            "port": 4443,
+            "ip": -649068924
+        }
+    ]
+}

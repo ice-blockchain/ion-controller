@@ -18,8 +18,8 @@ for i in range(len(lines)):
 	line = lines[i]
 	if "ExecStart" not in line:
 		continue
-	if "ton-global.config.json" in line:
-		lines[i] += line.replace("validator-engine/ton-global.config.json", "global.config.json")
+	if "ion-testnet-global.config.json" in line:
+		lines[i] += line.replace("validator-engine/ion-testnet-global.config.json", "global.config.json")
 #end for
 
 text = "\n".join(lines)

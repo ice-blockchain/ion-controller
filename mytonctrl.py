@@ -70,13 +70,13 @@ def Init(argv):
 	console.AddItem("xrestart", Xrestart, local.translate("xrestart_cmd"))
 	console.AddItem("xlist", Xlist, local.translate("xlist_cmd"))
 
-	console.AddItem("new_pool", NewPool, local.translate("new_pool_cmd"))
-	console.AddItem("pools_list", PrintPoolsList, local.translate("pools_list_cmd"))
-	console.AddItem("get_pool_data", GetPoolData, local.translate("get_pool_data_cmd"))
-	console.AddItem("activate_pool", ActivatePool, local.translate("activate_pool_cmd"))
-	console.AddItem("deposit_to_pool", DepositToPool, local.translate("deposit_to_pool_cmd"))
-	console.AddItem("withdraw_from_pool", WithdrawFromPool, local.translate("withdraw_from_pool_cmd"))
-	console.AddItem("delete_pool", DeletePool, local.translate("delete_pool_cmd"))
+	#console.AddItem("new_pool", NewPool, local.translate("new_pool_cmd"))
+	#console.AddItem("pools_list", PrintPoolsList, local.translate("pools_list_cmd"))
+	#console.AddItem("get_pool_data", GetPoolData, local.translate("get_pool_data_cmd"))
+	#console.AddItem("activate_pool", ActivatePool, local.translate("activate_pool_cmd"))
+	#console.AddItem("deposit_to_pool", DepositToPool, local.translate("deposit_to_pool_cmd"))
+	#console.AddItem("withdraw_from_pool", WithdrawFromPool, local.translate("withdraw_from_pool_cmd"))
+	#console.AddItem("delete_pool", DeletePool, local.translate("delete_pool_cmd"))
 
 	# Process input parameters
 	opts, args = getopt.getopt(argv,"hc:w:",["config=","wallets="])
@@ -116,7 +116,7 @@ def PreUp():
 #end define
 
 def Installer(args):
-	args = ["python3", "/usr/src/mytonctrl/mytoninstaller.py"]
+	args = ["python3", "/usr/src/ion-controller/mytoninstaller.py"]
 	subprocess.run(args)
 #end define
 
@@ -139,9 +139,9 @@ def check_vport():
 def check_git(input_args, default_repo, text):
 	src_dir = "/usr/src"
 	git_path = f"{src_dir}/{default_repo}"
-	default_author = "ton-blockchain"
-	default_branch = "master"
-
+	default_author = "ion-blockchain"
+	default_branch = "ion-fork"
+	
 	# Get author, repo, branch
 	local_author, local_repo = get_git_author_and_repo(git_path)
 	local_branch = get_git_branch(git_path)
@@ -197,7 +197,7 @@ def Update(args):
 	author, repo, branch = check_git(args, repo, "update")
 
 	# Run script
-	runArgs = ["bash", "/usr/src/mytonctrl/scripts/update.sh", "-a", author, "-r", repo, "-b", branch]
+	runArgs = ["bash", "/usr/src/ion-controller/scripts/update.sh", "-a", author, "-r", repo, "-b", branch]
 	exitCode = run_as_root(runArgs)
 	if exitCode == 0:
 		text = "Update - {green}OK{endc}"
