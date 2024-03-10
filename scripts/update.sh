@@ -8,9 +8,9 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Set default arguments
-author="ton-blockchain"
-repo="mytonctrl"
-branch="master"
+author="ion-blockchain"
+repo="ion-controller"
+branch="ion-fork"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
 
