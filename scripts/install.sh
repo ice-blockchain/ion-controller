@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# wget this file:
+# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/install.sh
+
 # Проверить sudo
 if [ "$(id -u)" != "0" ]; then
 	echo "Please run script as root"
