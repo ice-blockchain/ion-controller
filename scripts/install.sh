@@ -90,7 +90,7 @@ if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
 	echo "TON exist"
 	cd $SOURCES_DIR
 	rm -rf $SOURCES_DIR/ion-controller
-	git clone --recursive https://github.com/ice-blockchain/ion-controller.git
+	git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller.git
 else
 	rm -f toninstaller.sh
 	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/toninstaller.sh
