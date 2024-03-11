@@ -27,7 +27,7 @@ systemctl daemon-reload
 
 # Удаление файлов
 rm -rf /usr/src/ion-controller
-rm -rf /usr/src/ice-open-network
+rm -rf /usr/src/ion
 rm -rf /usr/bin/ton
 rm -rf /var/ton-work
 rm -rf /var/ton-dht-server
