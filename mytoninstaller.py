@@ -53,7 +53,7 @@ def Refresh():
 	src_dir = "/usr/src/"
 	ton_work_dir = "/var/ton-work/"
 	ton_bin_dir = bin_dir + "ton/"
-	ton_src_dir = src_dir + "ice-open-network/"
+	ton_src_dir = src_dir + "ion/"
 	local.buffer.bin_dir = bin_dir
 	local.buffer.src_dir = src_dir
 	local.buffer.ton_work_dir = ton_work_dir
@@ -925,7 +925,7 @@ def CreateSymlinks():
 	subprocess.run(args)
 
 	# env
-	fiftpath = "export FIFTPATH=/usr/src/ice-open-network/crypto/fift/lib/:/usr/src/ice-open-network/crypto/smartcont/"
+	fiftpath = "export FIFTPATH=/usr/src/ion/crypto/fift/lib/:/usr/src/ion/crypto/smartcont/"
 	file = open(env_file, 'rt+')
 	text = file.read()
 	if fiftpath not in text:

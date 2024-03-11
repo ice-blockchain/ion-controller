@@ -130,11 +130,11 @@ pip3 install psutil fastcrc requests
 # Клонирование репозиториев с github.com
 echo -e "${COLOR}[2/6]${ENDC} Cloning github repository"
 cd $SOURCES_DIR
-rm -rf $SOURCES_DIR/ice-open-network
+rm -rf $SOURCES_DIR/ion
 rm -rf $SOURCES_DIR/ion-controller
-git clone --recursive https://github.com/ice-blockchain/ice-open-network
+git clone --recursive https://github.com/ice-blockchain/ion
 git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller
-git config --global --add safe.directory $SOURCES_DIR/ice-open-network
+git config --global --add safe.directory $SOURCES_DIR/ion
 git config --global --add safe.directory $SOURCES_DIR/ion-controller
 
 cd $BIN_DIR
@@ -167,12 +167,12 @@ fi
 if [[ "$OSTYPE" =~ darwin.* ]]; then
 	if [[ $(uname -p) == 'arm' ]]; then
 		echo M1
-		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ice-open-network -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev -GNinja
+		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ion -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev -GNinja
 	else
-		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ice-open-network -GNinja
+		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ion -GNinja
 	fi
 else
-	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ice-open-network -GNinja -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
+	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ion -GNinja -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
 fi
 
 # Компилируем из исходников
