@@ -1148,18 +1148,13 @@ class MyTonCore():
 		local.add_log("start GetConfig32 function", "debug")
 		config32 = dict()
 		result = self.liteClient.Run("getconfig 32")
-		config32["totalValidators"] = int(parse(result, "total:", ' '))
-		if config32["totalValidators"] is None:
-			local.add_log("GetConfig32 error: totalValidators not found", "warning")
-			config32["totalValidators"] = 0
-		config32["startWorkTime"] = int(parse(result, "utime_since:", ' '))
-		if config32["startWorkTime"] is None:
-			local.add_log("GetConfig32 error: startWorkTime not found", "warning")
-			config32["startWorkTime"] = 0
-		config32["endWorkTime"] = int(parse(result, "utime_until:", ' '))
-		if config32["endWorkTime"] is None:
-			local.add_log("GetConfig32 error: endWorkTime not found", "warning")
-			config32["endWorkTime"] = 0
+		local.add_log("GetConfig32 result: " + result, "debug")
+		temp = parse(result, "total:", ' ')
+		config32["totalValidators"] = 0 if temp is None else int(temp)
+		temp = parse(result, "utime_since:", ' ')
+		config32["startWorkTime"] = 0 if temp is None else int(temp)
+		temp = parse(result, "utime_until:", ' ')
+		config32["endWorkTime"] = 0 if temp is None else int(temp)
 		lines = result.split('\n')
 		validators = list()
 		for line in lines:

@@ -37,8 +37,8 @@ rm -rf ${srcdir}/${repo}
 
 # Update code
 echo "https://github.com/${author}/${repo}.git -> ${branch}"
-git clone --recursive https://github.com/${author}/${repo}.git
-cd ${repo} && git checkout ${branch} && git submodule update --init --recursive
+git clone -b ${branch} --recursive https://github.com/${author}/${repo}.git
+#cd ${repo} && git checkout ${branch} && git submodule update --init --recursive
 systemctl restart mytoncore
 
 # Конец
