@@ -105,7 +105,7 @@ user=$(whoami)
 if [ "$parent_name" = "sudo" ] || [ "$parent_name" = "su" ]; then
     user=$(logname)
 fi
-python3 ${SOURCES_DIR}/ion-controller/mytoninstaller.py -m ${mode} -u ${user} -t ${telemetry} --dump ${dump}
+python3 ${SOURCES_DIR}/ion-controller/mytoninstaller.py -m ${mode} -u ${user}
 
 # Выход из программы
 echo -e "${COLOR}[4/4]${ENDC} Mytonctrl installation completed"
