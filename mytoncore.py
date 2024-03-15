@@ -390,6 +390,7 @@ class MyTonCore():
 		local.add_log("start GetSeqno function", "debug")
 		cmd = "runmethodfull {addr} seqno".format(addr=wallet.addrB64)
 		result = self.liteClient.Run(cmd)
+		local.add_log("result: {result}".format(result=result), "debug")
 		if "cannot run any methods" in result:
 			return None
 		if "result" not in result:
