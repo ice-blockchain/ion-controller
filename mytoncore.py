@@ -392,10 +392,14 @@ class MyTonCore():
 		result = self.liteClient.Run(cmd)
 		local.add_log("result: {result}".format(result=result), "debug")
 		if "cannot run any methods" in result:
+			local.add_log("cannot run any methods", "debug")
 			return None
 		if "result" not in result:
+			local.add_log("result not in result", "debug")
 			return 0
+		local.add_log("result in result", "debug")
 		seqno = self.GetVarFromWorkerOutput(result, "result")
+		local.add_log("seqno: {seqno}".format(seqno=seqno), "debug")
 		seqno = seqno.replace(' ', '')
 		seqno = parse(seqno, '[', ']')
 		seqno = int(seqno)
