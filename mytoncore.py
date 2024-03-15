@@ -356,6 +356,7 @@ class MyTonCore():
 	#end define
 
 	def GetVarFromWorkerOutput(self, text, search):
+		local.add_log("start GetVarFromWorkerOutput function", "debug")
 		if ':' not in search:
 			search += ':'
 		if search is None or text is None:
