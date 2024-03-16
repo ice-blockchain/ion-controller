@@ -2052,6 +2052,7 @@ class MyTonCore():
 		local.add_log("seqno: " + str(seqno), "debug")
 		resultFilePath = local.buffer.my_temp_dir + wallet.name + "_wallet-query"
 		local.add_log("resultFilePath: " + resultFilePath, "debug")
+		local.add_log("wallet.version: " + wallet.version, "debug")
 		if "v1" in wallet.version:
 			fiftScript = "wallet.fif"
 			args = [fiftScript, wallet.path, dest, seqno, coins, "-m", mode, resultFilePath]
