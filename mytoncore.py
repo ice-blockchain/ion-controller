@@ -1453,44 +1453,64 @@ class MyTonCore():
 	#end define
 
 	def SendFile(self, filePath, wallet=None, **kwargs):
-		local.add_log("start SendFile function: " + filePath, "debug")
+		local.add_log("Start SendFile function with filePath: " + filePath, "debug")
+
 		timeout = kwargs.get("timeout", 30)
+		local.add_log("Timeout set to: " + str(timeout), "debug")
+
 		remove = kwargs.get("remove", True)
+		local.add_log("Remove flag set to: " + str(remove), "debug")
+
 		duplicateSendfile = local.db.get("duplicateSendfile", True)
+		local.add_log("DuplicateSendfile flag set to: " + str(duplicateSendfile), "debug")
+
 		if not os.path.isfile(filePath):
-			raise Exception("SendFile error: no such file '{filePath}'".format(filePath=filePath))
+			error_msg = f"SendFile error: no such file '{filePath}'"
+			local.add_log(error_msg, "error")
+			raise Exception(error_msg)
+
 		if timeout and wallet:
 			wallet.oldseqno = self.GetSeqno(wallet)
+			local.add_log("Saved old seqno for wallet: " + str(wallet.oldseqno), "debug")
+
+		# Execute the sendfile command
+		local.add_log(f"Running liteClient sendfile with '{filePath}'", "info")
 		self.liteClient.Run("sendfile " + filePath)
+
 		if duplicateSendfile:
-			try:
-				self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
-				self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
-			except Exception as e:
-				local.add_log('failed to send file via liteclient: ' + str(e), 'info')
-			self.send_boc_toncenter(filePath)
+			local.add_log(f"DuplicateSendfile is enabled. Sending file '{filePath}' again with useLocalLiteServer=False", "info")
+			self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
+			self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
+
 		if timeout and wallet:
+			local.add_log(f"Waiting for transaction to complete with timeout: {timeout}", "info")
 			self.WaitTransaction(wallet, timeout)
-		if remove == True:
+
+		if remove:
+			local.add_log(f"Removing file: {filePath}", "info")
 			os.remove(filePath)
+
+		local.add_log("SendFile function completed successfully.", "debug")
 	#end define
 
-	def send_boc_toncenter(self, file_path: str):
-		local.add_log('Start send_boc_toncenter function: ' + file_path, 'debug')
-		with open(file_path, "rb") as f:
-			boc = f.read()
-			boc_b64 = base64.b64encode(boc).decode("utf-8")
-		data = {"boc": boc_b64}
-		if self.GetNetworkName() == 'testnet':
-			url = 'https://testnet.toncenter.com/api/v2/sendBoc'
-		else:
-			url = 'https://toncenter.com/api/v2/sendBoc'
-		result = requests.post(url=url, json=data)
-		if result.status_code != 200:
-			local.add_log(f'Failed to send boc to toncenter: {result.content}', 'info')
-			return False
-		local.add_log('Sent boc to toncenter', 'info')
-		return True
+
+
+	#def send_boc_toncenter(self, file_path: str):
+	#	local.add_log('Start send_boc_toncenter function: ' + file_path, 'debug')
+	#	with open(file_path, "rb") as f:
+	#		boc = f.read()
+	#		boc_b64 = base64.b64encode(boc).decode("utf-8")
+	#	data = {"boc": boc_b64}
+	#	if self.GetNetworkName() == 'testnet':
+	#		url = 'https://testnet.toncenter.com/api/v2/sendBoc'
+	#	else:
+	#		url = 'https://toncenter.com/api/v2/sendBoc'
+	#	result = requests.post(url=url, json=data)
+	#	if result.status_code != 200:
+	#		local.add_log(f'Failed to send boc to toncenter: {result.content}', 'info')
+	#		return False
+	#	local.add_log('Sent boc to toncenter', 'info')
+	#	return True
 
 	def WaitTransaction(self, wallet, timeout=30):
 		local.add_log("start WaitTransaction function", "debug")
