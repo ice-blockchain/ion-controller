@@ -2042,7 +2042,7 @@ class MyTonCore():
 			args = [fiftScript, wallet.path, dest, subwallet, seqno, coins, "-m", mode, resultFilePath]
 		if flags:
 			args += flags
-		cmd = " ".join(args)
+		cmd = " ".join(str(args))
 		local.add_log("MoveConins cmd: " + cmd, "debug")
 		result = self.fift.Run(args)
 		savedFilePath = parse(result, "Saved to file ", ")")
