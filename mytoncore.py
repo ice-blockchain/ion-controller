@@ -42,6 +42,9 @@ class LiteClient:
 				args += ["-i", index]
 		#end if
 
+		cmd = " ".join(args)
+		local.add_log("cmd: {cmd}".format(cmd=cmd), "debug")
+
 		process = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
 		output = process.stdout.decode("utf-8")
 		err = process.stderr.decode("utf-8")
@@ -91,7 +94,7 @@ class Fift:
 		includePath = self.libsPath + ':' + self.smartcontsPath
 		args = [self.appPath, "-I", includePath, "-s"] + args
 		cmd = " ".join(args)
-		local.add_log("cmd: {cmd}".format(cmd=cmd), "debug")
+		local.add_log("Fift cmd: {cmd}".format(cmd=cmd), "debug")
 		process = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
 		output = process.stdout.decode("utf-8")
 		err = process.stderr.decode("utf-8")
@@ -393,6 +396,7 @@ class MyTonCore():
 	def GetSeqno(self, wallet):
 		local.add_log("start GetSeqno function", "debug")
 		cmd = "runmethodfull {addr} seqno".format(addr=wallet.addrB64)
+		local.add_log("cmd: {cmd}".format(cmd=cmd), "debug")
 		result = self.liteClient.Run(cmd)
 		local.add_log("result: {result}".format(result=result), "debug")
 		if "cannot run any methods" in result:
@@ -2059,6 +2063,8 @@ class MyTonCore():
 			args = [fiftScript, wallet.path, dest, subwallet, seqno, coins, "-m", mode, resultFilePath]
 		if flags:
 			args += flags
+		cmd = " ".join(args)
+		local.add_log("MoveConins cmd: " + cmd, "debug")
 		result = self.fift.Run(args)
 		savedFilePath = parse(result, "Saved to file ", ")")
 		self.SendFile(savedFilePath, wallet, timeout=timeout)
