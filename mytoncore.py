@@ -1452,23 +1452,46 @@ class MyTonCore():
 	#end define
 
 	def SendFile(self, filePath, wallet=None, **kwargs):
-		local.add_log("start SendFile function: " + filePath, "debug")
+		local.add_log("Start SendFile function with filePath: " + filePath, "debug")
+
 		timeout = kwargs.get("timeout", 30)
+		local.add_log("Timeout set to: " + str(timeout), "debug")
+
 		remove = kwargs.get("remove", True)
+		local.add_log("Remove flag set to: " + str(remove), "debug")
+
 		duplicateSendfile = local.db.get("duplicateSendfile", True)
+		local.add_log("DuplicateSendfile flag set to: " + str(duplicateSendfile), "debug")
+
 		if not os.path.isfile(filePath):
-			raise Exception("SendFile error: no such file '{filePath}'".format(filePath=filePath))
+			error_msg = f"SendFile error: no such file '{filePath}'"
+			local.add_log(error_msg, "error")
+			raise Exception(error_msg)
+
 		if timeout and wallet:
 			wallet.oldseqno = self.GetSeqno(wallet)
+			local.add_log("Saved old seqno for wallet: " + str(wallet.oldseqno), "debug")
+
+		# Execute the sendfile command
+		local.add_log(f"Running liteClient sendfile with '{filePath}'", "info")
 		self.liteClient.Run("sendfile " + filePath)
+
 		if duplicateSendfile:
+			local.add_log(f"DuplicateSendfile is enabled. Sending file '{filePath}' again with useLocalLiteServer=False", "info")
 			self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
 			self.liteClient.Run("sendfile " + filePath, useLocalLiteServer=False)
+
 		if timeout and wallet:
+			local.add_log(f"Waiting for transaction to complete with timeout: {timeout}", "info")
 			self.WaitTransaction(wallet, timeout)
-		if remove == True:
+
+		if remove:
+			local.add_log(f"Removing file: {filePath}", "info")
 			os.remove(filePath)
+
+		local.add_log("SendFile function completed successfully.", "debug")
 	#end define
+
 
 	def WaitTransaction(self, wallet, timeout=30):
 		local.add_log("start WaitTransaction function", "debug")
