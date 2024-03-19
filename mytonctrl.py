@@ -15,7 +15,7 @@ def Init(argv):
 	local.init_translator(local.buffer.my_dir + "translate.json")
 
 	# Create user console
-	console.name = "MyTonCtrl"
+	console.name = "Ion-Controller"
 	console.startFunction = PreUp
 
 	console.AddItem("update", Update, local.translate("update_cmd"))
