@@ -3,7 +3,7 @@
 
 from mypylib.mypylib import *
 from mypyconsole.mypyconsole import *
-from mytoncore import *
+from myioncore import *
 import sys, getopt, os
 
 local = MyPyClass(__file__)
