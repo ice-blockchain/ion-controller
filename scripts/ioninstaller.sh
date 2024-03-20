@@ -196,5 +196,5 @@ echo -e "${COLOR}[5/6]${ENDC} Downloading config files"
 wget ${config} -O global.config.json
 
 # Выход из программы
-echo -e "${COLOR}[6/6]${ENDC} TON software installation complete"
+echo -e "${COLOR}[6/6]${ENDC} ION software installation complete"
 exit 0
