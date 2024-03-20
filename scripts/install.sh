@@ -13,7 +13,7 @@ fi
 show_help_and_exit() {
     echo 'Supported argumets:'
     echo ' -m [lite|full]   Choose installation mode'
-    echo ' -c  PATH         Provide custom config for toninstaller.sh'
+    echo ' -c  PATH         Provide custom config for ioninstaller.sh'
     echo ' -t               Disable telemetry'
     echo ' -i               Ignore minimum reqiurements'
     echo ' -d               Use pre-packaged dump. Reduces duration of initial synchronization.'
@@ -69,7 +69,7 @@ COLOR='\033[92m'
 ENDC='\033[0m'
 
 # Начинаю установку mytonctrl
-echo -e "${COLOR}[1/4]${ENDC} Starting installation MyTonCtrl"
+echo -e "${COLOR}[1/4]${ENDC} Starting installation Ion-Controller"
 mydir=$(pwd)
 
 # На OSX нет такой директории по-умолчанию, поэтому создаем...
@@ -81,32 +81,32 @@ if [[ "$OSTYPE" =~ darwin.* ]]; then
 	mkdir -p ${SOURCES_DIR}
 fi
 
-# Проверяю наличие компонентов TON
-echo -e "${COLOR}[2/4]${ENDC} Checking for required TON components"
-file1=${BIN_DIR}/ton/crypto/fift
-file2=${BIN_DIR}/ton/lite-client/lite-client
-file3=${BIN_DIR}/ton/validator-engine-console/validator-engine-console
+# Проверяю наличие компонентов ION
+echo -e "${COLOR}[2/4]${ENDC} Checking for required ION components"
+file1=${BIN_DIR}/ion/crypto/fift
+file2=${BIN_DIR}/ion/lite-client/lite-client
+file3=${BIN_DIR}/ion/validator-engine-console/validator-engine-console
 if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
-	echo "TON exist"
+	echo "ION exist"
 	cd $SOURCES_DIR
 	rm -rf $SOURCES_DIR/ion-controller
 	git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller.git
 else
-	rm -f toninstaller.sh
-	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/toninstaller.sh
-	bash toninstaller.sh -c "${config}"
-	rm -f toninstaller.sh
+	rm -f ioninstaller.sh
+	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/ioninstaller.sh
+	bash ioninstaller.sh -c "${config}"
+	rm -f ioninstaller.sh
 fi
 
-# Запускаю установщик mytoninstaller.py
-echo -e "${COLOR}[3/4]${ENDC} Launching the mytoninstaller.py"
+# Запускаю установщик myioninstaller.py
+echo -e "${COLOR}[3/4]${ENDC} Launching the myioninstaller.py"
 parent_name=$(ps -p $PPID -o comm=)
 user=$(whoami)
 if [ "$parent_name" = "sudo" ] || [ "$parent_name" = "su" ]; then
     user=$(logname)
 fi
-python3 ${SOURCES_DIR}/ion-controller/mytoninstaller.py -m ${mode} -u ${user}
+python3 ${SOURCES_DIR}/ion-controller/myioninstaller.py -m ${mode} -u ${user}
 
 # Выход из программы
-echo -e "${COLOR}[4/4]${ENDC} Mytonctrl installation completed"
+echo -e "${COLOR}[4/4]${ENDC} Ion-Controller installation completed"
 exit 0

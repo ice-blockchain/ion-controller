@@ -928,7 +928,7 @@ class MyTonCore():
 		#cmd = f"gethead {block}"
 		#result = self.liteClient.Run(cmd)
 		#seqno =  parse(result, "prev_key_block_seqno=", '\n')
-		statesDir = "/var/ton-work/db/archive/states"
+		statesDir = "/var/ion-work/db/archive/states"
 		os.chdir(statesDir)
 		files = filter(os.path.isfile, os.listdir(statesDir))
 		files = [os.path.join(statesDir, f) for f in files] # add path to each file
@@ -2799,7 +2799,7 @@ class MyTonCore():
 	#end define
 
 	def GetDbUsage(self):
-		path = "/var/ton-work/db"
+		path = "/var/ion-work/db"
 		data = psutil.disk_usage(path)
 		return data.percent
 	#end define
@@ -2808,7 +2808,7 @@ class MyTonCore():
 		local.add_log("start GetDbSize function", "debug")
 		exceptions = exceptions.split()
 		totalSize = 0
-		path = "/var/ton-work/"
+		path = "/var/ion-work/"
 		for directory, subdirectory, files in os.walk(path):
 			for file in files:
 				buff = file.split('.')
@@ -3457,7 +3457,7 @@ class MyTonCore():
 		if not os.path.isfile("/usr/bin/func"):
 			return
 		#	file = open("/usr/bin/func", 'wt')
-		#	file.write("/usr/bin/ton/crypto/func $@")
+		#	file.write("/usr/bin/ion/crypto/func $@")
 		#	file.close()
 		#end if
 
@@ -4152,7 +4152,7 @@ def Telemetry(ton):
 	# Get git hashes
 	gitHashes = dict()
 	gitHashes["mytonctrl"] = get_git_hash("/usr/src/ion-controller")
-	gitHashes["validator"] = GetBinGitHash("/usr/bin/ton/validator-engine/validator-engine")
+	gitHashes["validator"] = GetBinGitHash("/usr/bin/ion/validator-engine/validator-engine")
 	data["gitHashes"] = gitHashes
 	data["stake"] = local.db.get("stake")
 	
