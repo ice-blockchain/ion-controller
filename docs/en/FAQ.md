@@ -9,8 +9,8 @@ MyTonCtrl is a wrapper that stores its files in two places:
 
 MyTonCtrl also includes another script, mytoncore, which in turn stores files in the following locations:
 
-1. `~/.local/share/mytoncore/` - Permanent files, the main configuration will be stored here.
-2. `/tmp/mytoncore/` - Temporary files, parameters used for elections will be saved here.
+1. `~/.local/share/myioncore/` - Permanent files, the main configuration will be stored here.
+2. `/tmp/myioncore/` - Temporary files, parameters used for elections will be saved here.
 
 MyTonCtrl downloads the source code for itself and the validator into the following directories:
 
@@ -19,7 +19,7 @@ MyTonCtrl downloads the source code for itself and the validator into the follow
 
 MyTonCtrl compiles the validator components into the following directory:
 
-1. `/usr/bin/ton/`
+1. `/usr/bin/ion/`
 
 MyTonCtrl creates a working directory for the validator here:
 
@@ -32,7 +32,7 @@ MyTonCtrl creates a working directory for the validator here:
 The configurations will be stored differently:
 
 1. `/usr/local/bin/mytonctrl/`
-2. `/usr/local/bin/mytoncore/`
+2. `/usr/local/bin/myioncore/`
 
 ---
 
@@ -42,7 +42,7 @@ Run the script as an administrator and remove the compiled TON components:
 
 ```bash
 sudo bash /usr/src/mytonctrl/scripts/uninstall.sh
-sudo rm -rf /usr/bin/ton
+sudo rm -rf /usr/bin/ion
 ```
 
 During this process, ensure you have sufficient permissions to delete or modify these files or directories.
@@ -91,7 +91,7 @@ If you want to change the working directory of the validator from `/var/ton/` af
     mv /var/ton/* /opt/ton/
     ```
 
-3. **Update configuration paths** - Replace the paths in the configuration located at `~/.local/share/mytoncore/mytoncore.db`.
+3. **Update configuration paths** - Replace the paths in the configuration located at `~/.local/share/myioncore/myioncore.db`.
 
 4. **Note on experience** - There is no prior experience with such a transfer, so consider this when moving forward.
 

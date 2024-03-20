@@ -12,37 +12,37 @@ ENDC='\033[0m'
 
 # Остановка служб
 systemctl stop validator
-systemctl stop mytoncore
+systemctl stop myioncore
 systemctl stop dht-server
 
 # Переменные
-str=$(systemctl cat mytoncore | grep User | cut -d '=' -f2)
+str=$(systemctl cat myioncore | grep User | cut -d '=' -f2)
 user=$(echo ${str})
 
 # Удаление служб
 rm -rf /etc/systemd/system/validator.service
-rm -rf /etc/systemd/system/mytoncore.service
+rm -rf /etc/systemd/system/myioncore.service
 rm -rf /etc/systemd/system/dht-server.service
 systemctl daemon-reload
 
 # Удаление файлов
 rm -rf /usr/src/ion-controller
 rm -rf /usr/src/ion
-rm -rf /usr/bin/ton
-rm -rf /var/ton-work
-rm -rf /var/ton-dht-server
-rm -rf /tmp/myton*
-rm -rf /usr/local/bin/mytoninstaller/
-rm -rf /usr/local/bin/mytoncore
-rm -rf /home/${user}/.local/share/mytonctrl
-rm -rf /home/${user}/.local/share/mytoncore/mytoncore.db
+rm -rf /usr/bin/ion
+rm -rf /var/ion-work
+rm -rf /var/ion-dht-server
+rm -rf /tmp/myion*
+rm -rf /usr/local/bin/myioninstaller/
+rm -rf /usr/local/bin/myioncore
+rm -rf /home/${user}/.local/share/myionctrl
+rm -rf /home/${user}/.local/share/myioncore/myioncore.db
 
 # Удаление ссылок
 rm -rf /usr/bin/fift
 rm -rf /usr/bin/liteclient
 rm -rf /usr/bin/lite-client
 rm -rf /usr/bin/validator-console
-rm -rf /usr/bin/mytonctrl
+rm -rf /usr/bin/myionctrl
 
 # Конец
 echo -e "${COLOR}Uninstall Complete${ENDC}"

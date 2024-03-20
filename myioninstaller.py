@@ -1,4 +1,4 @@
-#!/usr/bin/env python3/usr/src/ion-controller/mytoncore.py
+#!/usr/bin/env python3/usr/src/ion-controller/myioncore.py
 # -*- coding: utf_8 -*-
 
 import pwd
@@ -9,7 +9,7 @@ from mypyconsole.mypyconsole import *
 
 local = MyPyClass(__file__)
 console = MyPyConsole()
-defaultLocalConfigPath = "/usr/bin/ton/local.config.json"
+defaultLocalConfigPath = "/usr/bin/ion/local.config.json"
 
 
 def Init():
@@ -43,15 +43,15 @@ def Init():
 
 def Refresh():
 	user = local.buffer.user
-	local.buffer.mconfig_path = "/home/{user}/.local/share/mytoncore/mytoncore.db".format(user=user)
+	local.buffer.mconfig_path = "/home/{user}/.local/share/myioncore/myioncore.db".format(user=user)
 	if user == 'root':
-		local.buffer.mconfig_path = "/usr/local/bin/mytoncore/mytoncore.db"
+		local.buffer.mconfig_path = "/usr/local/bin/myioncore/myioncore.db"
 	#end if
 
 	# create variables
 	bin_dir = "/usr/bin/"
 	src_dir = "/usr/src/"
-	ton_work_dir = "/var/ton-work/"
+	ton_work_dir = "/var/ion-work/"
 	ton_bin_dir = bin_dir + "ton/"
 	ton_src_dir = src_dir + "ion/"
 	local.buffer.bin_dir = bin_dir
@@ -138,7 +138,7 @@ def CreateLocalConfig(initBlock, localConfigPath=defaultLocalConfigPath):
 	from mytoncore import hex2base64
 
 	# read global config file
-	file = open("/usr/bin/ton/global.config.json", 'rt')
+	file = open("/usr/bin/ion/global.config.json", 'rt')
 	text = file.read()
 	data = json.loads(text)
 	file.close()
@@ -224,7 +224,7 @@ def General():
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
 
-		# Создать настройки для mytoncore.py
+		# Создать настройки для myioncore.py
 		FirstMytoncoreSettings()
 
 		if mode == "full":
@@ -284,7 +284,7 @@ def FirstNodeSettings():
 	cpus = psutil.cpu_count() - 1
 	cmd = "{validatorAppPath} --threads {cpus} --daemonize --global-config {globalConfigPath} --db {ton_db_dir} --logname {tonLogPath} --state-ttl 604800 --verbosity 1"
 	cmd = cmd.format(validatorAppPath=validatorAppPath, globalConfigPath=globalConfigPath, ton_db_dir=ton_db_dir, tonLogPath=tonLogPath, cpus=cpus)
-	add2systemd(name="validator", user=vuser, start=cmd) # post="/usr/bin/python3 /usr/src/mytonctrl/mytoncore.py -e \"validator down\""
+	add2systemd(name="validator", user=vuser, start=cmd) # post="/usr/bin/python3 /usr/src/mytonctrl/myioncore.py -e \"validator down\""
 
 	# Получить внешний ip адрес
 	ip = get_own_ip()
@@ -301,7 +301,7 @@ def FirstNodeSettings():
 	#DownloadDump()
 
 	# chown 1
-	local.add_log("Chown ton-work dir", "debug")
+	local.add_log("Chown ion-work dir", "debug")
 	args = ["chown", "-R", vuser + ':' + vuser, ton_work_dir]
 	subprocess.run(args)
 
@@ -330,7 +330,7 @@ def DownloadDump():
 	os.system(cmd)
 
 	# download dump
-	cmd = "curl -Ls {url}/dumps/latest.tar.lz | pv | plzip -d -n8 | tar -xC /var/ton-work/db".format(url=url)
+	cmd = "curl -Ls {url}/dumps/latest.tar.lz | pv | plzip -d -n8 | tar -xC /var/ion-work/db".format(url=url)
 	os.system(cmd)
 #end define
 
@@ -338,14 +338,14 @@ def FirstMytoncoreSettings():
 	local.add_log("start FirstMytoncoreSettings fuction", "debug")
 	user = local.buffer.user
 
-	# Прописать mytoncore.py в автозагрузку
-	add2systemd(name="mytoncore", user=user, start="/usr/bin/python3 /usr/src/ion-controller/mytoncore.py")
+	# Прописать myioncore.py в автозагрузку
+	add2systemd(name="myioncore", user=user, start="/usr/bin/python3 /usr/src/ion-controller/myioncore.py")
 
 	# Проверить конфигурацию
-	path = "/home/{user}/.local/share/mytoncore/mytoncore.db".format(user=user)
-	path2 = "/usr/local/bin/mytoncore/mytoncore.db"
+	path = "/home/{user}/.local/share/myioncore/myioncore.db".format(user=user)
+	path2 = "/usr/local/bin/myioncore/myioncore.db"
 	if os.path.isfile(path) or os.path.isfile(path2):
-		local.add_log("mytoncore.db already exist. Break FirstMytoncoreSettings fuction", "warning")
+		local.add_log("myioncore.db already exist. Break FirstMytoncoreSettings fuction", "warning")
 		return
 	#end if
 
@@ -502,8 +502,8 @@ def EnableValidatorConsole():
 	# write mconfig
 	SetConfig(path=mconfig_path, data=mconfig)
 
-	# Подтянуть событие в mytoncore.py
-	cmd = "python3 {src_dir}ion-controller/mytoncore.py -e \"enableVC\"".format(src_dir=src_dir)
+	# Подтянуть событие в myioncore.py
+	cmd = "python3 {src_dir}ion-controller/myioncore.py -e \"enableVC\"".format(src_dir=src_dir)
 	args = ["su", "-l", user, "-c", cmd]
 	subprocess.run(args)
 
@@ -612,7 +612,7 @@ def StartValidator():
 def StartMytoncore():
 	# restart mytoncore
 	local.add_log("Start/restart mytoncore service", "debug")
-	args = ["systemctl", "restart", "mytoncore"]
+	args = ["systemctl", "restart", "myioncore"]
 	subprocess.run(args)
 #end define
 
@@ -646,7 +646,7 @@ def BackupVconfig():
 #end define
 
 def BackupMconfig():
-	local.add_log("Backup mytoncore config file 'mytoncore.db' to 'mytoncore.db.backup'", "debug")
+	local.add_log("Backup mytoncore config file 'myioncore.db' to 'myioncore.db.backup'", "debug")
 	mconfig_path = local.buffer.mconfig_path
 	backupPath = mconfig_path + ".backup"
 	args = ["cp", mconfig_path, backupPath]
@@ -689,7 +689,7 @@ def DangerousRecoveryValidatorConfigFile():
 
 	# Get keys from keyring
 	keys = list()
-	keyringDir = "/var/ton-work/db/keyring/"
+	keyringDir = "/var/ion-work/db/keyring/"
 	keyring = os.listdir(keyringDir)
 	os.chdir(keyringDir)
 	sorted(keyring, key=os.path.getmtime)
@@ -786,7 +786,7 @@ def DangerousRecoveryValidatorConfigFile():
 	vconfig.control = [buff]
 
 	# Get dht fragment
-	files = os.listdir("/var/ton-work/db")
+	files = os.listdir("/var/ion-work/db")
 	for item in files:
 		if item[:3] == "dht":
 			dhtS = item[4:]
@@ -832,7 +832,7 @@ def DangerousRecoveryValidatorConfigFile():
 
 	# Get dumps from tmp
 	dumps = list()
-	dumpsDir = "/tmp/mytoncore/"
+	dumpsDir = "/tmp/myioncore/"
 	dumpsList = os.listdir(dumpsDir)
 	os.chdir(dumpsDir)
 	sorted(dumpsList, key=os.path.getmtime)
@@ -907,17 +907,17 @@ def CreateSymlinks():
 	validator_console_file = "/usr/bin/validator-console"
 	env_file = "/etc/environment"
 	file = open(mytonctrl_file, 'wt')
-	file.write("/usr/bin/python3 /usr/src/ion-controller/mytonctrl.py $@")
+	file.write("/usr/bin/python3 /usr/src/ion-controller/myionctrl.py $@")
 	file.close()
 	file = open(fift_file, 'wt')
-	file.write("/usr/bin/ton/crypto/fift $@")
+	file.write("/usr/bin/ion/crypto/fift $@")
 	file.close()
 	file = open(liteclient_file, 'wt')
-	file.write("/usr/bin/ton/lite-client/lite-client -C /usr/bin/ton/global.config.json $@")
+	file.write("/usr/bin/ion/lite-client/lite-client -C /usr/bin/ion/global.config.json $@")
 	file.close()
 	if cport:
 		file = open(validator_console_file, 'wt')
-		file.write("/usr/bin/ton/validator-engine-console/validator-engine-console -k /var/ton-work/keys/client -p /var/ton-work/keys/server.pub -a 127.0.0.1:" + str(cport) + " $@")
+		file.write("/usr/bin/ion/validator-engine-console/validator-engine-console -k /var/ion-work/keys/client -p /var/ion-work/keys/server.pub -a 127.0.0.1:" + str(cport) + " $@")
 		file.close()
 		args = ["chmod", "+x", validator_console_file]
 		subprocess.run(args)
@@ -940,11 +940,11 @@ def EnableDhtServer():
 	globalConfigPath = local.buffer.global_config_path
 	dht_server = ton_bin_dir + "dht-server/dht-server"
 	generate_random_id = ton_bin_dir + "utils/generate-random-id"
-	tonDhtServerDir = "/var/ton-dht-server/"
+	tonDhtServerDir = "/var/ion-dht-server/"
 	tonDhtKeyringDir = tonDhtServerDir + "keyring/"
 
 	# Проверить конфигурацию
-	if os.path.isfile("/var/ton-dht-server/config.json"):
+	if os.path.isfile("/var/ion-dht-server/config.json"):
 		local.add_log("DHT-Server config.json already exist. Break EnableDhtServer fuction", "warning")
 		return
 	#end if

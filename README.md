@@ -80,8 +80,8 @@ MyTonCtrl is a console application that serves as a convenient wrapper for `fift
 
 # Installation
 ## Installation scripts overview
-- `toninstaller.sh`: clones `TON` and` mytonctrl` sources to `/usr/src/ton` and`/usr/src/mytonctrl` folders, compiles programs from sources and writes them to `/usr/bin/`.
-- `mytoninstaller.py`: configures the validator and `mytonctrl`; generates validator connection keys.
+- `ioninstaller.sh`: clones `TON` and` mytonctrl` sources to `/usr/src/ton` and`/usr/src/mytonctrl` folders, compiles programs from sources and writes them to `/usr/bin/`.
+- `myioninstaller.py`: configures the validator and `mytonctrl`; generates validator connection keys.
 
 ## Installation modes
 There are two installation modes: `lite` and`full`. They both **compile** and install `TON` components. However the `lite` version does not configure or run the node/validator.

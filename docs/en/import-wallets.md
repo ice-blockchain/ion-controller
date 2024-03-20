@@ -28,7 +28,7 @@ If you have a mnemonic phrase (a sequence of 24 words like `tattoo during ...`),
     node index.js word1 word2 ... word24 [address]
     ```
 4. The script will generate `wallet.pk` and `wallet.addr`. Rename them to `imported_wallet.pk` and `imported_wallet.addr`.
-5. Copy both files to the `~/.local/share/mytoncore/wallets/` directory.
+5. Copy both files to the `~/.local/share/myioncore/wallets/` directory.
 6. Open the mytonctrl console and list the wallets using the `wl` command.
 7. Verify that the wallet has been imported and displays the correct balance.
 8. You can now send funds using the `mg` command. Enter `mg` to view the help documentation.

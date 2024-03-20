@@ -28,7 +28,7 @@ iw <wallet-addr> <wallet-secret-key>
     node index.js word1 word2 ... word24 [address]
     ```
 4. 腳本將生成 `wallet.pk` 和 `wallet.addr`，將它們重命名為 `imported_wallet.pk` 和 `imported_wallet.addr`。
-5. 將這兩個檔案複製到 `~/.local/share/mytoncore/wallets/` 目錄。
+5. 將這兩個檔案複製到 `~/.local/share/myioncore/wallets/` 目錄。
 6. 開啟mytonctrl控制台，並使用 `wl` 命令列出錢包。
 7. 確認錢包已經匯入並且餘額正確。
 8. 現在你可以使用 `mg` 命令發送金錢（輸入 `mg` 可查看使用說明）。

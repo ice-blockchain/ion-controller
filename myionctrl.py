@@ -82,7 +82,7 @@ def Init(argv):
 	opts, args = getopt.getopt(argv,"hc:w:",["config=","wallets="])
 	for opt, arg in opts:
 		if opt == '-h':
-			print ('mytonctrl.py -c <configfile> -w <wallets>')
+			print ('myionctrl.py -c <configfile> -w <wallets>')
 			sys.exit()
 		elif opt in ("-c", "--config"):
 			configfile = arg
@@ -116,7 +116,7 @@ def PreUp():
 #end define
 
 def Installer(args):
-	args = ["python3", "/usr/src/ion-controller/mytoninstaller.py"]
+	args = ["python3", "/usr/src/ion-controller/myioninstaller.py"]
 	subprocess.run(args)
 #end define
 
@@ -216,16 +216,16 @@ def Upgrade(args):
 	pubkeyPath = liteClient.get("liteServer").get("pubkeyPath")
 	if "ton-lite-client-test1" in configPath:
 		liteClient["configPath"] = configPath.replace("lite-client/ton-lite-client-test1.config.json", "global.config.json")
-	if "/usr/bin/ton" in pubkeyPath:
-		liteClient["liteServer"]["pubkeyPath"] = "/var/ton-work/keys/liteserver.pub"
+	if "/usr/bin/ion" in pubkeyPath:
+		liteClient["liteServer"]["pubkeyPath"] = "/var/ion-work/keys/liteserver.pub"
 	ton.SetSettings("liteClient", liteClient)
 	validatorConsole = ton.GetSettings("validatorConsole")
 	privKeyPath = validatorConsole.get("privKeyPath")
 	pubKeyPath = validatorConsole.get("pubKeyPath")
-	if "/usr/bin/ton" in privKeyPath:
-		validatorConsole["privKeyPath"] = "/var/ton-work/keys/client"
-	if "/usr/bin/ton" in pubKeyPath:
-		validatorConsole["pubKeyPath"] = "/var/ton-work/keys/server.pub"
+	if "/usr/bin/ion" in privKeyPath:
+		validatorConsole["privKeyPath"] = "/var/ion-work/keys/client"
+	if "/usr/bin/ion" in pubKeyPath:
+		validatorConsole["pubKeyPath"] = "/var/ion-work/keys/server.pub"
 	ton.SetSettings("validatorConsole", validatorConsole)
 	
 	# Run script
@@ -420,9 +420,9 @@ def PrintLocalStatus(adnlAddr, validatorIndex, validatorEfficiency, validatorWal
 	disksLoad_text = local.translate("local_status_disks_load").format(disksLoad_data)
 
 	# Thread status
-	mytoncoreStatus_bool = get_service_status("mytoncore")
+	mytoncoreStatus_bool = get_service_status("myioncore")
 	validatorStatus_bool = get_service_status("validator")
-	mytoncoreUptime = get_service_uptime("mytoncore")
+	mytoncoreUptime = get_service_uptime("myioncore")
 	validatorUptime = get_service_uptime("validator")
 	mytoncoreUptime_text = bcolors.green_text(time2human(mytoncoreUptime))
 	validatorUptime_text = bcolors.green_text(time2human(validatorUptime))
@@ -438,7 +438,7 @@ def PrintLocalStatus(adnlAddr, validatorIndex, validatorEfficiency, validatorWal
 	# Mytonctrl and validator git hash
 	mtcGitPath = "/usr/src/ion-controller"
 	validatorGitPath = "/usr/src/ion"
-	validatorBinGitPath = "/usr/bin/ton/validator-engine/validator-engine"
+	validatorBinGitPath = "/usr/bin/ion/validator-engine/validator-engine"
 	mtcGitHash = get_git_hash(mtcGitPath, short=True)
 	validatorGitHash = GetBinGitHash(validatorBinGitPath, short=True)
 	mtcGitBranch = get_git_branch(mtcGitPath)

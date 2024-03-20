@@ -7,8 +7,8 @@ MyTonCtrl 是一個包裝器，會在兩個地方儲存檔案：
 
 MyTonCtrl 也包含了另一個腳本 mytoncore，它將檔案儲存到以下位置：
 
-1. `~/.local/share/mytoncore/` - 持久檔案，主要的設定檔會儲存在這裡
-2. `/tmp/mytoncore/` - 臨時檔案，選舉使用的參數將會保存在此
+1. `~/.local/share/myioncore/` - 持久檔案，主要的設定檔會儲存在這裡
+2. `/tmp/myioncore/` - 臨時檔案，選舉使用的參數將會保存在此
 
 MyTonCtrl 會將自身和驗證者的源碼下載到以下資料夾：
 
@@ -17,7 +17,7 @@ MyTonCtrl 會將自身和驗證者的源碼下載到以下資料夾：
 
 MyTonCtrl 會將驗證者的組件編譯到以下資料夾：
 
-1. `/usr/bin/ton/`
+1. `/usr/bin/ion/`
 
 MyTonCtrl 會在這裡建立一個驗證者工作的資料夾：
 
@@ -30,7 +30,7 @@ MyTonCtrl 會在這裡建立一個驗證者工作的資料夾：
 那麼，設定檔會以不同的方式存放：
 
 1. `/usr/local/bin/mytonctrl/`
-2. `/usr/local/bin/mytoncore/`
+2. `/usr/local/bin/myioncore/`
 
 ---
 
@@ -40,7 +40,7 @@ MyTonCtrl 會在這裡建立一個驗證者工作的資料夾：
 
 ```bash
 sudo bash /usr/src/mytonctrl/scripts/uninstall.sh
-sudo rm -rf /usr/bin/ton
+sudo rm -rf /usr/bin/ion
 ```
 
 在這個過程中，確保你有足夠的權限來刪除或更改這些檔案或目錄。
@@ -88,7 +88,7 @@ Error: expected str, bytes or os.PathLike object, not NoneType
     mv /var/ton/* /opt/ton/
     ```
 
-3. **更改配置中的路徑** - 將 `~/.local/share/mytoncore/mytoncore.db` 中的路徑替換為新的路徑。
+3. **更改配置中的路徑** - 將 `~/.local/share/myioncore/myioncore.db` 中的路徑替換為新的路徑。
 
 4. **注意事項** - 之前並未有過如此的轉移經驗，所以進行此操作時請小心。
 
