@@ -6,6 +6,9 @@ DUMP_DIR="/var/ion-work"
 # Define the directory where the archived folders are located
 DB_DIR="/var/ion-work/db"
 
+# Stop validator-engine
+systemctl stop validator
+
 # Navigate to the dump directory
 cd "$DUMP_DIR"
 
@@ -51,3 +54,6 @@ else
 fi
 
 echo "Process completed."
+
+# Start validator-engine
+systemctl start validator
