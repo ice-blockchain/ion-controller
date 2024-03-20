@@ -39,8 +39,8 @@ rm -rf ${srcdir}/${repo}
 echo "https://github.com/${author}/${repo}.git -> ${branch}"
 git clone -b ${branch} --recursive https://github.com/${author}/${repo}.git
 #cd ${repo} && git checkout ${branch} && git submodule update --init --recursive
-systemctl restart mytoncore
+systemctl restart myioncore
 
 # Конец
-echo -e "${COLOR}[1/1]${ENDC} MyTonCtrl components update completed"
+echo -e "${COLOR}[1/1]${ENDC} Ion-Controller components update completed"
 exit 0
