@@ -284,7 +284,7 @@ def FirstNodeSettings():
 	cpus = psutil.cpu_count() - 1
 	cmd = "{validatorAppPath} --threads {cpus} --daemonize --global-config {globalConfigPath} --db {ton_db_dir} --logname {tonLogPath} --state-ttl 604800 --verbosity 1"
 	cmd = cmd.format(validatorAppPath=validatorAppPath, globalConfigPath=globalConfigPath, ton_db_dir=ton_db_dir, tonLogPath=tonLogPath, cpus=cpus)
-	add2systemd(name="validator", user=vuser, start=cmd) # post="/usr/bin/python3 /usr/src/mytonctrl/myioncore.py -e \"validator down\""
+	add2systemd(name="validator", user=vuser, start=cmd) # post="/usr/bin/python3 /usr/src/ion-controller/myioncore.py -e \"validator down\""
 
 	# Получить внешний ip адрес
 	ip = get_own_ip()
@@ -491,7 +491,7 @@ def EnableValidatorConsole():
 	mconfig_path = local.buffer.mconfig_path
 	mconfig = GetConfig(path=mconfig_path)
 
-	# edit mytoncore config file
+	# edit myioncore config file
 	validatorConsole = Dict()
 	validatorConsole.appPath = ton_bin_dir + "validator-engine-console/validator-engine-console"
 	validatorConsole.privKeyPath = client_key
@@ -507,7 +507,7 @@ def EnableValidatorConsole():
 	args = ["su", "-l", user, "-c", cmd]
 	subprocess.run(args)
 
-	# restart mytoncore
+	# restart myioncore
 	StartMytoncore()
 #end define
 
@@ -576,14 +576,14 @@ def EnableLiteServer():
 	# restart validator
 	StartValidator()
 
-	# edit mytoncore config file
+	# edit myioncore config file
 	# read mconfig
 	local.add_log("read mconfig", "debug")
 	mconfig_path = local.buffer.mconfig_path
 	mconfig = GetConfig(path=mconfig_path)
 
-	# edit mytoncore config file
-	local.add_log("edit mytoncore config file", "debug")
+	# edit myioncore config file
+	local.add_log("edit myioncore config file", "debug")
 	liteServer = Dict()
 	liteServer.pubkeyPath = liteserver_pubkey
 	liteServer.ip = "127.0.0.1"
@@ -594,7 +594,7 @@ def EnableLiteServer():
 	local.add_log("write mconfig", "debug")
 	SetConfig(path=mconfig_path, data=mconfig)
 
-	# restart mytoncore
+	# restart myioncore
 	StartMytoncore()
 #end define
 
@@ -611,7 +611,7 @@ def StartValidator():
 
 def StartMytoncore():
 	# restart mytoncore
-	local.add_log("Start/restart mytoncore service", "debug")
+	local.add_log("Start/restart myioncore service", "debug")
 	args = ["systemctl", "restart", "myioncore"]
 	subprocess.run(args)
 #end define
@@ -646,7 +646,7 @@ def BackupVconfig():
 #end define
 
 def BackupMconfig():
-	local.add_log("Backup mytoncore config file 'myioncore.db' to 'myioncore.db.backup'", "debug")
+	local.add_log("Backup myioncore config file 'myioncore.db' to 'myioncore.db.backup'", "debug")
 	mconfig_path = local.buffer.mconfig_path
 	backupPath = mconfig_path + ".backup"
 	args = ["cp", mconfig_path, backupPath]
@@ -665,8 +665,8 @@ def GetPortsFromVconfig():
 	mconfig_path = local.buffer.mconfig_path
 	mconfig = GetConfig(path=mconfig_path)
 
-	# edit mytoncore config file
-	local.add_log("edit mytoncore config file", "debug")
+	# edit myioncore config file
+	local.add_log("edit myioncore config file", "debug")
 	mconfig.liteClient.liteServer.port = mconfig.liteservers[0].port
 	mconfig.validatorConsole.addr = f"127.0.0.1:{mconfig.control[0].port}"
 
@@ -674,7 +674,7 @@ def GetPortsFromVconfig():
 	local.add_log("write mconfig", "debug")
 	SetConfig(path=mconfig_path, data=mconfig)
 
-	# restart mytoncore
+	# restart myioncore
 	StartMytoncore()
 #end define
 
@@ -901,7 +901,7 @@ def CreateSymlinks():
 	local.add_log("start CreateSymlinks fuction", "debug")
 	cport = local.buffer.cport
 
-	mytonctrl_file = "/usr/bin/mytonctrl"
+	mytonctrl_file = "/usr/bin/myionctrl"
 	fift_file = "/usr/bin/fift"
 	liteclient_file = "/usr/bin/lite-client"
 	validator_console_file = "/usr/bin/validator-console"
