@@ -4,7 +4,7 @@
 SOURCE_DIR="/var/ion-work/db"
 
 # Define the backup directory (change this to your desired backup location)
-BACKUP_DIR="/var/ion-work/dumps/"
+BACKUP_DIR="/var/ion-work/dumps"
 
 # Create a timestamp for the backup file
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
