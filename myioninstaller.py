@@ -52,7 +52,7 @@ def Refresh():
 	bin_dir = "/usr/bin/"
 	src_dir = "/usr/src/"
 	ton_work_dir = "/var/ion-work/"
-	ton_bin_dir = bin_dir + "ton/"
+	ton_bin_dir = bin_dir + "ion/"
 	ton_src_dir = src_dir + "ion/"
 	local.buffer.bin_dir = bin_dir
 	local.buffer.src_dir = src_dir

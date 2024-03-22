@@ -148,9 +148,9 @@ make build_libs -j12
 
 # Подготавливаем папки для компиляции
 echo -e "${COLOR}[3/6]${ENDC} Preparing for compilation"
-rm -rf $BIN_DIR/ton
-mkdir $BIN_DIR/ton
-cd $BIN_DIR/ton
+rm -rf $BIN_DIR/ion
+mkdir $BIN_DIR/ion
+cd $BIN_DIR/ion
 
 # Подготовиться к компиляции
 if [[ "$OSTYPE" =~ darwin.* ]]; then
