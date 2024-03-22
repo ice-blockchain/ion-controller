@@ -29,7 +29,53 @@
                     },
                     "version": -1,
                     "signature": "GmWbhW0IwEQyvD5/EMD6aY+oRCWxrXAY8w+cwy61eO18lH1a7NAol5G+FKEDwbaPxctDkUkj+WxMcqP+mPSvBQ=="
-                }
+                },
+                {
+                    "@type": "dht.node",
+                    "id": {
+                        "@type": "pub.ed25519",
+                        "key": "GUAlBe8dz3OnAc9A8DFpkquLRG0rnTczz3BVw2V0BWo="
+                    },
+                    "addr_list": {
+                        "@type": "adnl.addressList",
+                        "addrs": [
+                            {
+                                "@type": "adnl.address.udp",
+                                "ip": 861507996,
+                                "port": 30913
+                            }
+                        ],
+                        "version": 0,
+                        "reinit_date": 0,
+                        "priority": 0,
+                        "expire_at": 0
+                    },
+                    "version": -1,
+                    "signature": "TLHqdzLSvPGYzogUY27FjhDpbOBpZCTLc6KsQoEQ6sNRIbYewiPq/4KyqxeibpS4oFJqF6BFNNKkfr034P7XAA=="
+                },
+                {
+                    "@type": "dht.node",
+                    "id": {
+                        "@type": "pub.ed25519",
+                        "key": "TWcVmulXDC2fZSa460cwnjgFPiipfkzuT3PcNbyxIaQ="
+                    },
+                    "addr_list": {
+                        "@type": "adnl.addressList",
+                        "addrs": [
+                            {
+                                "@type": "adnl.address.udp",
+                                "ip": 400798245,
+                                "port": 48539
+                            }
+                        ],
+                        "version": 0,
+                        "reinit_date": 0,
+                        "priority": 0,
+                        "expire_at": 0
+                    },
+                    "version": -1,
+                    "signature": "NRVj2QfEd4h9174O1V3Jf5Bo25gBPwRBaXZJC0dMjfcaoLdzd3BJzNxFEflQLchX9C4O3HWtYsuRgpJulqIrCA=="
+                }                
             ]
         }
     },
@@ -58,6 +104,14 @@
             },
             "port": 4443,
             "ip": -649068924
+        },
+        {
+            "id": {
+                "key": "xrQTSJokpy7ZnUouardeBoHbLVxZTA/fG/hkTxEotfaIx24w",
+                "@type": "pub.ed25519"
+            },
+            "port": 39130,
+            "ip": 400798248
         }
     ]
 }
