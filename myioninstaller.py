@@ -127,7 +127,7 @@ def GetLiteServerConfig():
 #end define
 
 def GetInitBlock():
-	from mytoncore import MyTonCore
+	from myioncore import MyTonCore
 	ton = MyTonCore()
 	initBlock = ton.GetInitBlock()
 	return initBlock
@@ -135,7 +135,7 @@ def GetInitBlock():
 
 def CreateLocalConfig(initBlock, localConfigPath=defaultLocalConfigPath):
 	# dirty hack, but GetInitBlock() function uses the same technique
-	from mytoncore import hex2base64
+	from myioncore import hex2base64
 
 	# read global config file
 	file = open("/usr/bin/ion/global.config.json", 'rt')

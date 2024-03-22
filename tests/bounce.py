@@ -3,7 +3,7 @@
 
 from sys import path
 path.append("/usr/src/ion-controller/")
-from mytoncore import *
+from myioncore import *
 
 Local = MyPyClass(__file__)
 ton = MyTonCore()
