@@ -104,6 +104,14 @@
             },
             "port": 4443,
             "ip": -649068924
+        },
+		{
+            "id": {
+                "key": "Y9EiLKeZN/7C6hHFPADXi7lV2M7ydunoAaUnXcKHhqc=",
+                "@type": "pub.ed25519"
+            },
+            "port": 48327,
+            "ip": 861507995
         }
     ]
 }
