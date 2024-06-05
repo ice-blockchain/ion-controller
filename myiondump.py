@@ -4,7 +4,7 @@ import tarfile
 import shutil
 import os
 import subprocess
-from time import sleep
+import time
 
 def create_dump_service(source_dir, upload_url, period):
     period_delta = timedelta(seconds=period)
