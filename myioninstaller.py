@@ -4,6 +4,8 @@
 import pwd
 import random
 import requests
+import tarfile
+import shutil
 from mypylib.mypylib import *
 from mypyconsole.mypyconsole import *
 
@@ -217,9 +219,15 @@ def General():
 		#local.buffer.telemetry = Str2Bool(telemetry)
 	if "--dump" in sys.argv:
 		print("dump functionality not supported yet by ion-controller")
+		
 		#mx = sys.argv.index("--dump")
 		#dump = sys.argv[mx+1]
 		#local.buffer.dump = Str2Bool(dump)
+		# Define the directory where the dump file is located
+		dump_url="/var/ion-work"
+		# Define the directory where the archived folders are located
+		db_dir="/var/ion-work/db"
+		restore_dump_service(dump_url, db_dir)
 	if "-m" in sys.argv:
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
@@ -227,7 +235,7 @@ def General():
 		# Создать настройки для myioncore.py
 		FirstMytoncoreSettings()
 
-		if mode == "full":
+		if mode == "full"():
 			FirstNodeSettings()
 			EnableValidatorConsole()
 			EnableLiteServer()
@@ -245,6 +253,58 @@ def Str2Bool(str):
 		return True
 	return False
 #end define
+
+def restore_dump_service(dump_url, db_dir):
+    # Stop validator-engine
+    subprocess.run(["systemctl", "stop", "validator"], check=True)
+
+    # Define the name of the downloaded archive file
+    archive_path = "/tmp/dump_restore.tar.gz"
+
+    # Download the dump file from the specified URL
+    try:
+        response = requests.get(dump_url, stream=True)
+        if response.status_code == 200:
+            with open(archive_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            print(f"Download successful: {archive_path}")
+        else:
+            print(f"Download failed: {response.status_code} - {response.text}")
+            return
+    except Exception as e:
+        print(f"Download failed: {e}")
+        return
+
+    # List of directories to delete in the DB directory
+    DIRS = ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
+
+    # Navigate to the DB directory
+    os.chdir(db_dir)
+
+    # Delete each directory
+    for dir_name in DIRS:
+        dir_path = os.path.join(db_dir, dir_name)
+        if os.path.isdir(dir_path):
+            print(f"Deleting {dir_path}...")
+            shutil.rmtree(dir_path)
+
+    # Unzip the dump file into the DB directory
+    print(f"Restoring from {archive_path} to {db_dir}...")
+    try:
+        with tarfile.open(archive_path, "r:gz") as tar:
+            tar.extractall(db_dir)
+        print("Restoration successful. Deleting the dump file...")
+        os.remove(archive_path)
+    except Exception as e:
+        print(f"Restoration failed: {e}")
+
+    print("Process completed.")
+
+    # Start validator-engine
+    subprocess.run(["systemctl", "start", "validator"], check=True)
+#end define
+
 
 def FirstNodeSettings():
 	local.add_log("start FirstNodeSettings fuction", "debug")
