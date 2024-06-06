@@ -1,10 +1,10 @@
-import requests
-from datetime import datetime, timedelta
-import tarfile
-import shutil
 import os
+import shutil
 import subprocess
+import tarfile
+from datetime import datetime, timedelta
 import time
+import requests
 
 def create_dump_service(source_dir, upload_url, period):
     period_delta = timedelta(seconds=period)
@@ -74,5 +74,3 @@ def create_dump_service(source_dir, upload_url, period):
         # Ensure we sleep only for a positive duration
         if sleep_time > 0:
             time.sleep(sleep_time)
-#end define
-

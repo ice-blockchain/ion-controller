@@ -223,11 +223,8 @@ def General():
 		#mx = sys.argv.index("--dump")
 		#dump = sys.argv[mx+1]
 		#local.buffer.dump = Str2Bool(dump)
-		# Define the directory where the dump file is located
-		dump_url="/var/ion-work"
-		# Define the directory where the archived folders are located
-		db_dir="/var/ion-work/db"
-		restore_dump_service(dump_url, db_dir)
+
+		restore_dump_service()
 	if "-m" in sys.argv:
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
@@ -254,56 +251,47 @@ def Str2Bool(str):
 	return False
 #end define
 
-def restore_dump_service(dump_url, db_dir):
+def restore_dump_service(dump_dir="/var/ion-work", db_dir="/var/ion-work/db"):
     # Stop validator-engine
-    subprocess.run(["systemctl", "stop", "validator"], check=True)
+    subprocess.run(["systemctl", "stop", "validator"])
 
-    # Define the name of the downloaded archive file
-    archive_path = "/tmp/dump_restore.tar.gz"
+    # Find the dump file based on the pattern
+    dump_files = [f for f in os.listdir(dump_dir) if f.startswith("dump_") and f.endswith(".tar.gz")]
 
-    # Download the dump file from the specified URL
-    try:
-        response = requests.get(dump_url, stream=True)
-        if response.status_code == 200:
-            with open(archive_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
-            print(f"Download successful: {archive_path}")
-        else:
-            print(f"Download failed: {response.status_code} - {response.text}")
-            return
-    except Exception as e:
-        print(f"Download failed: {e}")
+    if not dump_files:
+        print(f"No dump file found in {dump_dir}.")
         return
 
-    # List of directories to delete in the DB directory
-    DIRS = ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
+    dump_file = dump_files[0]
+    print(f"Found dump file: {dump_file}")
 
-    # Navigate to the DB directory
-    os.chdir(db_dir)
+    # List of directories to delete in the DB directory
+    dirs_to_delete = ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
 
     # Delete each directory
-    for dir_name in DIRS:
+    for dir_name in dirs_to_delete:
         dir_path = os.path.join(db_dir, dir_name)
         if os.path.isdir(dir_path):
             print(f"Deleting {dir_path}...")
             shutil.rmtree(dir_path)
 
     # Unzip the dump file into the DB directory
-    print(f"Restoring from {archive_path} to {db_dir}...")
+    dump_file_path = os.path.join(dump_dir, dump_file)
     try:
-        with tarfile.open(archive_path, "r:gz") as tar:
-            tar.extractall(db_dir)
-        print("Restoration successful. Deleting the dump file...")
-        os.remove(archive_path)
+        with tarfile.open(dump_file_path, "r:gz") as tar:
+            tar.extractall(path=db_dir)
+        print(f"Restoration from {dump_file} to {db_dir} successful.")
+        os.remove(dump_file_path)
+        print("Dump file deleted.")
     except Exception as e:
         print(f"Restoration failed: {e}")
+        return
 
     print("Process completed.")
 
     # Start validator-engine
-    subprocess.run(["systemctl", "start", "validator"], check=True)
-#end define
+    subprocess.run(["systemctl", "start", "validator"])
+#end def
 
 
 def FirstNodeSettings():
