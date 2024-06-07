@@ -5,7 +5,7 @@ import tarfile
 from datetime import datetime, timedelta
 import time
 
-def create_dump_service(source_dir = "/var/ion-work/db", backup_dir = "/var/ion-work/backup", period = 86400):
+def create_dump_service(source_dir, backup_dir, period, delete_old_dump):
     period_delta = timedelta(seconds=period)
     
     while True:
@@ -43,6 +43,16 @@ def create_dump_service(source_dir = "/var/ion-work/db", backup_dir = "/var/ion-
         # Start validator-engine
         # subprocess.run(["systemctl", "start", "validator"], check=True)
 
+        if delete_old_dump:
+            try:
+                backups = sorted([f for f in os.listdir(backup_dir) if f.startswith('dump_') and f.endswith('.tar.gz')])
+                # Keep only the latest and the previous two backups
+                for old_backup in backups[:-3]:
+                    os.remove(os.path.join(backup_dir, old_backup))
+                print("Old backups deleted.")
+            except Exception as e:
+                print(f"Error deleting old backups: {e}")
+
         # Calculate the next start time
         next_start_time = start_time + period_delta
         sleep_time = (next_start_time - datetime.now()).total_seconds()
@@ -52,8 +62,17 @@ def create_dump_service(source_dir = "/var/ion-work/db", backup_dir = "/var/ion-
             time.sleep(sleep_time)
 
 if __name__ == "__main__":
-    # Example usage: Adjust these values as needed
-    source_dir = "/home/sabin/testpath/db"  # Ensure this directory exists and contains the expected subdirectories
-    backup_dir = "/home/sabin/testpath/backup"  # Ensure this directory exists and is writable
-    period = 10  # Run every period seconds
-    create_dump_service(source_dir, backup_dir, period)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Create and manage backups.")
+    parser.add_argument('source_dir', type=str, help="The source directory to back up.")
+    parser.add_argument('backup_dir', type=str, help="The directory to store backups.")
+    parser.add_argument('period', type=int, help="The period (in seconds) between backups.")
+    parser.add_argument('--delete_old_dump', action='store_true', help="Delete old backups, keeping only the latest and the previous two.")
+    
+    args = parser.parse_args()
+
+    create_dump_service(args.source_dir, args.backup_dir, args.period, args.delete_old_dump)
+
+# python3 myiondump.py /home/sabin/testpath/db /home/sabin/testpath/backup 10 --delete_old_dump
+
