@@ -221,10 +221,10 @@ def General():
 		print("dump functionality not supported yet by ion-controller")
 		
 		#mx = sys.argv.index("--dump")
-		#dump = sys.argv[mx+1]
+		#dump = ys.argv[mx+1]
 		#local.buffer.dump = Str2Bool(dump)
-
-		restore_dump_service()
+		# dump_url = ""
+		# restore_dump_service(dump_url)
 	if "-m" in sys.argv:
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
@@ -251,19 +251,24 @@ def Str2Bool(str):
 	return False
 #end define
 
-def restore_dump_service(dump_dir="/var/ion-work", db_dir="/var/ion-work/db"):
+def restore_dump_service(dump_url, db_dir="/var/ion-work/db"):
     # Stop validator-engine
     subprocess.run(["systemctl", "stop", "validator"])
 
-    # Find the dump file based on the pattern
-    dump_files = [f for f in os.listdir(dump_dir) if f.startswith("dump_") and f.endswith(".tar.gz")]
+    # Create a fixed temporary directory for downloading the dump file
+    temp_dir = "/tmp/restore_dump_temp"
+    os.makedirs(temp_dir, exist_ok=True)
+    dump_file = os.path.join(temp_dir, "dump_file.tar.gz")
 
-    if not dump_files:
-        print(f"No dump file found in {dump_dir}.")
+    # Download the dump file using wget
+    try:
+        print(f"Running wget -O {dump_file} {dump_url}")
+        subprocess.run(["wget", "-O", dump_file, dump_url], check=True)
+        print(f"Downloaded dump file from {dump_url} to {dump_file}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to download dump file: {e}")
+        shutil.rmtree(temp_dir)
         return
-
-    dump_file = dump_files[0]
-    print(f"Found dump file: {dump_file}")
 
     # List of directories to delete in the DB directory
     dirs_to_delete = ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
@@ -276,23 +281,23 @@ def restore_dump_service(dump_dir="/var/ion-work", db_dir="/var/ion-work/db"):
             shutil.rmtree(dir_path)
 
     # Unzip the dump file into the DB directory
-    dump_file_path = os.path.join(dump_dir, dump_file)
     try:
-        with tarfile.open(dump_file_path, "r:gz") as tar:
+        with tarfile.open(dump_file, "r:gz") as tar:
             tar.extractall(path=db_dir)
         print(f"Restoration from {dump_file} to {db_dir} successful.")
-        os.remove(dump_file_path)
-        print("Dump file deleted.")
     except Exception as e:
         print(f"Restoration failed: {e}")
+        shutil.rmtree(temp_dir)
         return
 
+    # Clean up temporary directory
+    shutil.rmtree(temp_dir)
+    print("Temporary files deleted.")
     print("Process completed.")
 
     # Start validator-engine
     subprocess.run(["systemctl", "start", "validator"])
-#end def
-
+#end define
 
 def FirstNodeSettings():
 	local.add_log("start FirstNodeSettings fuction", "debug")

@@ -1,71 +1,69 @@
 import os
 import shutil
-import requests
-from threading import Thread
-from time import sleep
+import subprocess
+import tarfile
 
-# Import the functions
-from dumpService import create_dump_service, restore_dump_service
+def restore_dump_service(dump_url, db_dir="/var/ion-work/db"):
+    # Stop validator-engine
+    # subprocess.run(["systemctl", "stop", "validator"])
 
-# Directory setup for testing
-TEST_SOURCE_DIR = "/tmp/test_source_dir"
-TEST_DB_DIR = "/tmp/test_db_dir"
-TEST_UPLOAD_URL = "http://127.0.0.1:5000/upload"
-TEST_DUMP_URL = "http://127.0.0.1:5000/uploads/dump_latest.tar.gz"
-TEST_PERIOD = 10  # Short period for testing
+    # Create a fixed temporary directory for downloading the dump file
+    temp_dir = "/tmp/restore_dump_temp"
+    os.makedirs(temp_dir, exist_ok=True)
+    dump_file = os.path.join(temp_dir, "dump_file.tar.gz")
 
-# Helper function to setup test directories
-def setup_test_directories():
-    os.makedirs(TEST_SOURCE_DIR, exist_ok=True)
-    os.makedirs(TEST_DB_DIR, exist_ok=True)
+    # Download the dump file using wget
+    try:
+        print(f"Running wget -O {dump_file} {dump_url}")
+        subprocess.run(["wget", "-O", dump_file, dump_url], check=True)
+        print(f"Downloaded dump file from {dump_url} to {dump_file}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to download dump file: {e}")
+        shutil.rmtree(temp_dir)
+        return
 
-    # Create dummy files in the source directory
-    for dir_name in ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]:
-        dir_path = os.path.join(TEST_SOURCE_DIR, dir_name)
-        os.makedirs(dir_path, exist_ok=True)
-        with open(os.path.join(dir_path, "dummy_file.txt"), "w") as f:
-            f.write("This is a test file.")
+    # List of directories to delete in the DB directory
+    dirs_to_delete = ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
 
-# Helper function to clean up test directories
-def clean_up_test_directories():
-    shutil.rmtree(TEST_SOURCE_DIR, ignore_errors=True)
-    shutil.rmtree(TEST_DB_DIR, ignore_errors=True)
+    # Delete each directory
+    for dir_name in dirs_to_delete:
+        dir_path = os.path.join(db_dir, dir_name)
+        if os.path.isdir(dir_path):
+            print(f"Deleting {dir_path}...")
+            shutil.rmtree(dir_path)
 
-# Function to run create_dump_service in a separate thread
-def run_create_dump_service():
-    create_dump_service(TEST_SOURCE_DIR, TEST_UPLOAD_URL, TEST_PERIOD)
+    # Unzip the dump file into the DB directory
+    try:
+        with tarfile.open(dump_file, "r:gz") as tar:
+            tar.extractall(path=db_dir)
+        print(f"Restoration from {dump_file} to {db_dir} successful.")
+    except Exception as e:
+        print(f"Restoration failed: {e}")
+        shutil.rmtree(temp_dir)
+        return
 
-# Function to run restore_dump_service
-def run_restore_dump_service():
-    restore_dump_service(TEST_DUMP_URL, TEST_DB_DIR)
+    # Clean up temporary directory
+    shutil.rmtree(temp_dir)
+    print("Temporary files deleted.")
+    print("Process completed.")
 
-# Setup test environment
-setup_test_directories()
+    # Start validator-engine
+    # subprocess.run(["systemctl", "start", "validator"])
 
-# Run create_dump_service in a separate thread
-thread = Thread(target=run_create_dump_service)
-thread.start()
-
-# Allow some time for the dump to be created and uploaded
-sleep(TEST_PERIOD * 2)
-
-# Run restore_dump_service
-run_restore_dump_service()
-
-# Verify restoration
-restored_files_exist = all(
-    os.path.exists(os.path.join(TEST_DB_DIR, dir_name, "dummy_file.txt"))
-    for dir_name in ["adnl", "archive", "catchains", "celldb", "files", "state", "overlays"]
-)
-
-print("Restored files exist:", restored_files_exist)
-
-# Clean up test environment
-thread.join()
-clean_up_test_directories()
-
-# Check if the restored files exist in the destination directory
-if restored_files_exist:
-    print("Test passed: Restored files exist in the DB directory.")
-else:
-    print("Test failed: Restored files do not exist in the DB directory.")
+# Example usage
+# restore_dump_service("http://example.com/path/to/dump_file.tar.gz")
+if __name__ == "__main__":
+    # URL of the dump file to download
+    dump_url = "http://localhost:8000/dump_file.tar.gz"
+    
+    # Directory where the database should be restored
+    db_dir = "/home/sabin/testpath/db_test"
+    
+    # Print a message indicating the start of the process
+    print("Starting the database restoration process...")
+    
+    # Call the restore_dump_service function
+    restore_dump_service(dump_url, db_dir)
+    
+    # Print a message indicating the end of the process
+    print("Database restoration process completed.")
