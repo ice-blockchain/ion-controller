@@ -217,14 +217,15 @@ def General():
 		#mx = sys.argv.index("-t")
 		#telemetry = sys.argv[mx+1]
 		#local.buffer.telemetry = Str2Bool(telemetry)
-	if "--dump" in sys.argv:
+	if "-d" in sys.argv:
 		print("dump functionality not supported yet by ion-controller")
 		
-		#mx = sys.argv.index("--dump")
-		#dump = ys.argv[mx+1]
+		mx = sys.argv.index("-d")
+		dump_url = sys.argv[mx+1]
 		#local.buffer.dump = Str2Bool(dump)
 		# dump_url = ""
-		# restore_dump_service(dump_url)
+		restore_dump_service(dump_url)
+
 	if "-m" in sys.argv:
 		mx = sys.argv.index("-m")
 		mode = sys.argv[mx+1]
