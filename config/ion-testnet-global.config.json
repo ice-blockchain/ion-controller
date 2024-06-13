@@ -105,13 +105,29 @@
             "port": 4443,
             "ip": -649068924
         },
-		{
+	{
             "id": {
                 "key": "Y9EiLKeZN/7C6hHFPADXi7lV2M7ydunoAaUnXcKHhqc=",
                 "@type": "pub.ed25519"
             },
             "port": 48327,
             "ip": 861507995
+        },
+        {
+            "id": {
+                "key": "pzsiapmlHkKobMNIXu5/eW2T2tpfgUFdLTF4ec6fwlc=",
+                "@type": "pub.ed25519"
+            },
+            "port": 53951,
+            "ip": 400798266
+        },
+	{
+            "id": {
+                "key": "miSnLtmdSi5qt14GgdstXFlMD98b+GRPESi19ojHbjA=",
+                "@type": "pub.ed25519"
+            },
+            "port": 53951,
+            "ip": 400798248
         }
     ]
 }
