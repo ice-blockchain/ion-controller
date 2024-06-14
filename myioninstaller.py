@@ -233,7 +233,7 @@ def General():
 		# Создать настройки для myioncore.py
 		FirstMytoncoreSettings()
 
-		if mode == "full"():
+		if mode == "full":
 			FirstNodeSettings()
 			EnableValidatorConsole()
 			EnableLiteServer()
