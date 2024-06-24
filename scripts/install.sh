@@ -93,7 +93,7 @@ if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
 	git clone -b ion-fork-rebase --recursive https://github.com/ice-blockchain/ion-controller.git
 else
 	rm -f ioninstaller.sh
-	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/ioninstaller.sh
+	# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/ioninstaller.sh
 	bash ioninstaller.sh -c "${config}"
 	rm -f ioninstaller.sh
 fi
