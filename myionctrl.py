@@ -4,7 +4,7 @@
 from mypylib.mypylib import *
 from mypyconsole.mypyconsole import *
 
-# from custom_overlays import add_custom_overlay, list_custom_overlays, delete_custom_overlay
+from custom_overlays import add_custom_overlay, list_custom_overlays, delete_custom_overlay
 from myioncore import *
 
 import sys, getopt, os
