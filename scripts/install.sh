@@ -2,7 +2,7 @@
 set -e
 
 # wget this file:
-# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/install.sh
+# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork-rebase/scripts/install.sh
 
 # Проверить sudo
 if [ "$(id -u)" != "0" ]; then
