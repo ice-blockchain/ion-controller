@@ -26,7 +26,8 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
 fi
 
 # Get arguments
-config="https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
+# config="https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
+config="http://23.29.127.149/configs/global.config.json"
 telemetry=true
 ignore=false
 dump=false
@@ -92,10 +93,12 @@ if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
 	rm -rf $SOURCES_DIR/ion-controller
 	git clone -b ion-fork-rebase --recursive https://github.com/ice-blockchain/ion-controller.git
 else
+	echo "ION components do not exist. Running ioninstaller.sh."
 	rm -f ioninstaller.sh
 	# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/ioninstaller.sh
+	cp /root/ioninstaller.sh ioninstaller.sh
 	bash ioninstaller.sh -c "${config}"
-	rm -f ioninstaller.sh
+	# rm -f ioninstaller.sh
 fi
 
 # Запускаю установщик myioninstaller.py
