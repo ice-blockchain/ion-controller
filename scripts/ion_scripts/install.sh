@@ -99,7 +99,7 @@ else
 	# rm -f ioninstaller.sh
 	echo "ION components do not exist. Running ioninstaller.sh."
 	rm -f ioninstaller.sh
-	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork-rebase/scripts/ioninstaller.sh
+	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork-rebase/scripts/ion_scripts/ioninstaller.sh
 	bash ioninstaller.sh -c "${config}"
 fi
 
