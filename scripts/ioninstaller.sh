@@ -133,7 +133,7 @@ cd $SOURCES_DIR
 rm -rf $SOURCES_DIR/ion
 rm -rf $SOURCES_DIR/ion-controller
 git clone --recursive https://github.com/ice-blockchain/ion
-git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller
+git clone -b ion-fork-rebase --recursive https://github.com/ice-blockchain/ion-controller
 git config --global --add safe.directory $SOURCES_DIR/ion
 git config --global --add safe.directory $SOURCES_DIR/ion-controller
 
@@ -193,7 +193,7 @@ ninja -j ${cpuNumber} fift validator-engine lite-client validator-engine-console
 
 # Скачиваем конфигурационные файлы lite-client
 echo -e "${COLOR}[5/6]${ENDC} Downloading config files"
-wget ${config} -O global.config.json
+# wget ${config} -O global.config.json
 
 # Выход из программы
 echo -e "${COLOR}[6/6]${ENDC} ION software installation complete"
