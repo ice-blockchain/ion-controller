@@ -8,7 +8,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Get arguments
-config="https://raw.githubusercontent.com/github.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
+config="https://raw.githubusercontent.com/github.com/ice-blockchain/ion-controller/ion-fork-rebase/config/ion-testnet-global.config.json"
 while getopts c: flag
 do
 	case "${flag}" in
