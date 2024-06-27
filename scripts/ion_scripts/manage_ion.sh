@@ -6,8 +6,8 @@ show_help_and_exit() {
     echo 'Perform various operations for Ion controller management.'
     echo ''
     echo 'Options:'
-    echo ' -i [install_ion_args]    Run install_ion.sh as root with optional arguments'
-    echo ' -f [install_ion_params]  Run install_ion_4_config_params.sh as root with optional arguments'
+    echo ' -i [install_ion_args]    Run install.sh as root with optional arguments'
+    echo ' -f [install_ion_params]  Run install_with_config_params.sh as root with optional arguments'
     echo ' -c                       Run myionctrl.py from /usr/src/ion-controller'
     echo ' -u <backup_folder> <original_config>  Pause validator, move folders, and update config'
     echo ' -h                       Show this help message and exit'
@@ -52,24 +52,24 @@ while getopts "ifcu:h" flag; do
     esac
 done
 
-# Function to run install_ion.sh as root
-run_install_ion() {
-    echo "Running install_ion.sh as root with arguments: ${install_ion_args}"
+# Function to run install.sh as root
+run_install() {
+    echo "Running install.sh as root with arguments: ${install_ion_args}"
     if [ "$(id -u)" != "0" ]; then
-        echo "Please run this script as root to execute install_ion.sh"
+        echo "Please run this script as root to execute install.sh"
         exit 1
     fi
     ./install.sh ${install_ion_args}
 }
 
-# Function to run install_ion_4_config_params.sh as root
-run_install_ion_4_config_params() {
-    echo "Running install_ion_4_config_params.sh as root with arguments: ${install_ion_params}"
+# Function to run install_with_config_params.sh as root
+run_install_with_config_params() {
+    echo "Running install_with_config_params.sh as root with arguments: ${install_ion_params}"
     if [ "$(id -u)" != "0" ]; then
-        echo "Please run this script as root to execute install_ion_4_config_params.sh"
+        echo "Please run this script as root to execute install_with_config_params.sh"
         exit 1
     fi
-    ./install_ion_4_config_params.sh ${install_ion_params}
+    ./install_with_config_params.sh ${install_ion_params}
 }
 
 # Function to run myionctrl.py from /usr/src/ion-controller
@@ -87,11 +87,11 @@ pause_validator_and_move_folders() {
 
 # Execute based on flags
 if [ "${run_install}" = true ]; then
-    run_install_ion
+    run_install
 fi
 
 if [ "${run_install_params}" = true ]; then
-    run_install_ion_4_config_params
+    run_install_with_config_params
 fi
 
 if [ "${run_myionctrl}" = true ]; then

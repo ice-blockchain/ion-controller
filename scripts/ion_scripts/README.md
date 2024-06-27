@@ -5,7 +5,7 @@ This repository contains scripts to manage the Ion controller. The primary scrip
 ## Scripts Overview
 
 - **install.sh**: Installs Ion components based on the provided mode (`lite` or `full`).
-- **install_ion_4_config_params.sh**: Installs Ion components with additional configuration parameters.
+- **install_with_config_params.sh**: Installs Ion components with additional configuration parameters.
 - **run_ioninstaller_with_config_path.sh**: Runs the Ion installer with a specified configuration file.
 - **pause_validator_to_move_folders_and_update_config.sh**: Pauses the validator, moves specific folders to a backup location, and updates the global configuration file.
 
@@ -21,7 +21,7 @@ Perform various operations for Ion controller management.
 
 Options:
  -i [install_ion_args]    Run install.sh as root with optional arguments
- -f [install_ion_params]  Run install_ion_4_config_params.sh as root with optional arguments
+ -f [install_ion_params]  Run install_with_config_params.sh as root with optional arguments
  -c                       Run myionctrl.py from /usr/src/ion-controller
  -u <backup_folder> <original_config>  Pause validator, move folders, and update config
  -h                       Show this help message and exit
@@ -32,7 +32,7 @@ Examples
 Run install.sh with arguments
 sudo ./manage_ion.sh -i -m full -c /path/to/config
 
-Run install_ion_4_config_params.sh with arguments
+Run install_with_config_params.sh with arguments
 sudo ./manage_ion.sh -f -m lite -c /path/to/config
 
 Run myionctrl.py
@@ -46,7 +46,7 @@ Detailed Script Descriptions
 install.sh
 This script installs the Ion components based on the specified mode (lite or full). It checks system resources and verifies if the required components are already installed.
 
-install_ion_4_config_params.sh
+install_with_config_params.sh
 This script installs the Ion components with additional configuration parameters. It allows specifying a custom configuration file and other options to customize the installation.
 
 run_ioninstaller_with_config_path.sh
