@@ -10,7 +10,7 @@ fi
 # Set default arguments
 author="ion-blockchain"
 repo="ion-controller"
-branch="ion-fork"
+branch="ion-fork-rebase"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
 

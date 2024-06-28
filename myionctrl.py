@@ -194,7 +194,7 @@ def GetAuthorRepoBranchFromArgs(args):
 
 def Update(args):
 	repo = "ion-controller"
-	author, repo, branch = check_git(args, repo, "ion-fork", "update")
+	author, repo, branch = check_git(args, repo, "ion-fork-rebase", "update")
 
 	# Run script
 	runArgs = ["bash", "/usr/src/ion-controller/scripts/update.sh", "-a", author, "-r", repo, "-b", branch]
