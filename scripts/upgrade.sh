@@ -32,7 +32,7 @@ ENDC='\033[0m'
 apt-get install -y libsecp256k1-dev libsodium-dev ninja-build liblz4-dev libjemalloc-dev
 
 # bugfix if the files are in the wrong place
-wget "https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json" -O global.config.json
+wget "https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork-rebase/config/ion-testnet-global.config.json" -O global.config.json
 if [ -f "/var/ion-work/keys/liteserver.pub" ]; then
     echo "Ok"
 else
