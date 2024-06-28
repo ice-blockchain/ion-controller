@@ -10,6 +10,7 @@ show_help_and_exit() {
     echo ' -f [install_ion_params]  Run install_with_config_params.sh as root with optional arguments'
     echo ' -c                       Run myionctrl.py from /usr/src/ion-controller'
     echo ' -u <backup_folder> <original_config>  Pause validator, move folders, and update config'
+    echo ' -d <url> <output_file>   Download global.config.json from a given URL'
     echo ' -h                       Show this help message and exit'
     exit 1
 }
@@ -28,6 +29,8 @@ install_ion_args=""
 install_ion_params=""
 backup_folder=""
 original_config=""
+download_url=""
+output_file=""
 
 # Parse arguments
 while getopts "ifcu:h" flag; do
@@ -46,6 +49,10 @@ while getopts "ifcu:h" flag; do
         u) pause_validator=true
            backup_folder=$OPTARG
            original_config=$2
+           shift 2;;
+        d) download_config=true
+           download_url=$OPTARG
+           output_file=$2
            shift 2;;
         h) show_help_and_exit;;
         *) echo "Invalid option: -${flag}" >&2; show_help_and_exit;;
@@ -85,6 +92,18 @@ pause_validator_and_move_folders() {
     ./pause_validator_to_move_folders_and_update_config.sh -b "${backup_folder}" -o "${original_config}"
 }
 
+# Function to download global.config.json from a given URL
+download_config() {
+    echo "Downloading global.config.json from ${download_url} to ${output_file}..."
+    curl -o "${output_file}" "${download_url}"
+    if [ $? -eq 0 ]; then
+        echo "Download completed successfully."
+    else
+        echo "Failed to download the file."
+        exit 1
+    fi
+}
+
 # Execute based on flags
 if [ "${run_install}" = true ]; then
     run_install
@@ -100,4 +119,8 @@ fi
 
 if [ "${pause_validator}" = true ]; then
     pause_validator_and_move_folders
+fi
+
+if [ "${download_config}" = true ]; then
+    download_config
 fi
