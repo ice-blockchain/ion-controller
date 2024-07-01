@@ -2,15 +2,19 @@
 
 # Function to show usage
 show_help() {
-    echo "Usage: $0 -u <url> -o <output_file>"
+    echo "Usage: $0 -u <url> [-o <output_file>]"
     echo "Download global.config.json from a given URL."
     echo "  -u URL            The URL to download the config from."
     echo "  -o OUTPUT_FILE    The file to save the downloaded config."
+    echo "  -h                Show this help message and exit"
     exit 1
 }
 
-# Check if at least 2 arguments are provided
-if [ $# -lt 4 ]; then
+# Default output file
+output_file="/usr/bin/ion/global.config.json"
+
+# Check if no arguments were provided
+if [ $# -eq 0 ]; then
     show_help
 fi
 
@@ -32,8 +36,9 @@ while getopts "u:o:h" opt; do
     esac
 done
 
-# Check if url and output_file variables are set
-if [ -z "${url}" ] || [ -z "${output_file}" ]; then
+# Check if url variable is set
+if [ -z "${url}" ]; then
+    echo "Error: URL is required."
     show_help
 fi
 
