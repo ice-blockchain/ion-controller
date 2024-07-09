@@ -29,7 +29,7 @@ COLOR='\033[92m'
 ENDC='\033[0m'
 
 # Установить дополнительные зависимости
-apt-get install -y libsecp256k1-dev libsodium-dev ninja-build
+apt-get install -y libsecp256k1-dev libsodium-dev ninja-build liblz4-dev libjemalloc-dev
 
 # bugfix if the files are in the wrong place
 wget "https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json" -O global.config.json
@@ -72,9 +72,17 @@ rm -rf .ninja_*
 memory=$(cat /proc/meminfo | grep MemAvailable | awk '{print $2}')
 let "cpuNumber = memory / 2100000" || cpuNumber=1
 
-cmake -DCMAKE_BUILD_TYPE=Release ${srcdir}/${repo} -GNinja -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
+cmake -DCMAKE_BUILD_TYPE=Release ${srcdir}/${repo} -GNinja -DTON_USE_JEMALLOC=ON -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
 ninja -j ${cpuNumber} fift validator-engine lite-client pow-miner validator-engine-console generate-random-id dht-server func tonlibjson rldp-http-proxy
 systemctl restart validator
+
+if [ -e /usr/src/mytonctrl/scripts/set_state_ttl.py ]
+then
+  /usr/bin/python3 /usr/src/mytonctrl/scripts/set_state_ttl.py
+else
+    echo "Set state ttl script is not found!"
+fi
+
 
 # Конец
 echo -e "${COLOR}[1/1]${ENDC} TON components update completed"

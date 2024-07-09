@@ -8,6 +8,8 @@ import hashlib
 import requests
 import re
 from mypylib.mypylib import *
+from custom_overlays import custom_overlays
+
 
 local = MyPyClass(__file__)
 
@@ -1492,7 +1494,6 @@ class MyTonCore():
 		local.add_log("SendFile function completed successfully.", "debug")
 	#end define
 
-
 	def WaitTransaction(self, wallet, timeout=30):
 		local.add_log("start WaitTransaction function", "debug")
 		timesleep = 3
@@ -2120,12 +2121,13 @@ class MyTonCore():
 
 	def GetValidatorKey(self):
 		vconfig = self.GetValidatorConfig()
-		for validator in vconfig.validators:
+		validators = sorted(vconfig["validators"], key=lambda i: i['election_date'], reverse=True)
+		for validator in validators:
 			validatorId = validator["id"]
 			key_bytes = base64.b64decode(validatorId)
 			validatorKey = key_bytes.hex().upper()
 			timestamp = get_timestamp()
-			if timestamp > validator["election_date"]:
+			if validator["election_date"] < timestamp < validator["expire_at"]:
 				return validatorKey
 		raise Exception("GetValidatorKey error: validator key not found. Are you sure you are a validator?")
 	#end define
@@ -2438,7 +2440,7 @@ class MyTonCore():
 	def GetSaveComplaints(self):
 		timestamp = get_timestamp()
 		saveComplaints = local.db.get("saveComplaints")
-		if type(saveComplaints) is not dict:
+		if saveComplaints is None:
 			saveComplaints = dict()
 			local.db["saveComplaints"] = saveComplaints
 		buff = saveComplaints.copy()
@@ -2515,12 +2517,12 @@ class MyTonCore():
 		if validatorIndex in offer.get("votedValidators"):
 			local.add_log("Proposal already has been voted", "debug")
 			return
+		self.AddSaveOffer(offer)
 		var1 = self.CreateConfigProposalRequest(offerHash, validatorIndex)
 		validatorSignature = self.GetValidatorSignature(validatorKey, var1)
 		resultFilePath = self.SignProposalVoteRequestWithValidator(offerHash, validatorIndex, validatorPubkey_b64, validatorSignature)
 		resultFilePath = self.SignBocWithWallet(wallet, resultFilePath, fullConfigAddr, 1.5)
 		self.SendFile(resultFilePath, wallet)
-		self.AddSaveOffer(offer)
 	#end define
 
 	def VoteComplaint(self, electionId, complaintHash):
@@ -3103,7 +3105,7 @@ class MyTonCore():
 	def GetSaveOffers(self):
 		bname = "saveOffers"
 		saveOffers = local.db.get(bname)
-		if type(saveOffers) != dict:
+		if saveOffers is None:
 			saveOffers = dict()
 			local.db[bname] = saveOffers
 		return saveOffers
@@ -3684,6 +3686,20 @@ class MyTonCore():
 		return poolData
 	#end define
 
+	def get_custom_overlays(self):
+		if 'custom_overlays' not in local.db:
+			local.db['custom_overlays'] = {}
+		return local.db['custom_overlays']
+
+	def set_custom_overlay(self, name: str, config: dict):
+		overlays = self.get_custom_overlays()
+		overlays[name] = config
+		local.save()
+
+	def delete_custom_overlay(self, name: str):
+		del local.db['custom_overlays'][name]
+		local.save()
+
 	def GetNetworkName(self):
 		mainnetValidatorsElectedFor = 65536
 		mainnetZerostateRootHash = "x55B13F6D0E1D0C34C9C2160F6F918E92D82BF9DDCF8DE2E4C94A3FDF39D15446"
@@ -4102,6 +4118,64 @@ def GetSwapInfo():
 	return result
 #end define
 
+def parse_db_stats(path: str):
+	with open(path) as f:
+		lines = f.readlines()
+	result = {}
+	for line in lines:
+		s = line.strip().split(maxsplit=1)
+		items = re.findall(r"(\S+)\s:\s(\S+)", s[1])
+		if len(items) == 1:
+			item = items[0]
+			if float(item[1]) > 0:
+				result[s[0]] = float(item[1])
+		else:
+			if any(float(v) > 0 for k, v in items):
+				result[s[0]] = {}
+				result[s[0]] = {k: float(v) for k, v in items}
+	return result
+# end define
+
+def get_db_stats():
+    result = {
+        'rocksdb': {
+            'ok': True,
+            'message': '',
+            'data': {}
+        },
+        'celldb': {
+            'ok': True,
+            'message': '',
+            'data': {}
+        },
+    }
+    rocksdb_stats_path = '/var/ton-work/db/db_stats.txt'
+    celldb_stats_path = '/var/ton-work/db/celldb/db_stats.txt'
+    if os.path.exists(rocksdb_stats_path):
+        try:
+            result['rocksdb']['data'] = parse_db_stats(rocksdb_stats_path)
+        except Exception as e:
+            result['rocksdb']['ok'] = False
+            result['rocksdb']['message'] = f'failed to fetch db stats: {e}'
+    else:
+        result['rocksdb']['ok'] = False
+        result['rocksdb']['message'] = 'db stats file is not exists'
+    # end if
+
+    if os.path.exists(celldb_stats_path):
+        try:
+            result['celldb']['data'] = parse_db_stats(celldb_stats_path)
+        except Exception as e:
+            result['celldb']['ok'] = False
+            result['celldb']['message'] = f'failed to fetch db stats: {e}'
+    else:
+        result['celldb']['ok'] = False
+        result['celldb']['message'] = 'db stats file is not exists'
+    # end if
+
+    return result
+# end define
+
 def GetValidatorProcessInfo():
 	pid = get_service_pid("validator")
 	if pid == None or pid == 0:
@@ -4146,6 +4220,7 @@ def Telemetry(ton):
 	data["swap"] = GetSwapInfo()
 	data["uname"] = GetUname()
 	data["vprocess"] = GetValidatorProcessInfo()
+	data["dbStats"] = get_db_stats()
 	elections = local.try_function(ton.GetElectionEntries)
 	complaints = local.try_function(ton.GetComplaints)
 
@@ -4273,6 +4348,7 @@ def General():
 	local.start_cycle(Telemetry, sec=60, args=(ton, ))
 	local.start_cycle(OverlayTelemetry, sec=7200, args=(ton, ))
 	local.start_cycle(ScanLiteServers, sec=60, args=(ton,))
+	local.start_cycle(custom_overlays, sec=60, args=(local, ton,))
 	thr_sleep()
 #end define
 
