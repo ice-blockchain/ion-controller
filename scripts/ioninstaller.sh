@@ -86,6 +86,7 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
 		apt-get update
 		apt-get install -y build-essential git cmake clang libgflags-dev zlib1g-dev libssl-dev libreadline-dev libmicrohttpd-dev pkg-config libgsl-dev python3 python3-dev python3-pip libsecp256k1-dev libsodium-dev liblz4-dev libjemalloc-dev
 
+
 		# Install ninja
 		apt-get install -y ninja-build
 

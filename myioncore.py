@@ -10,6 +10,7 @@ import re
 from mypylib.mypylib import *
 from custom_overlays import custom_overlays
 
+
 local = MyPyClass(__file__)
 
 class LiteClient:
@@ -1492,25 +1493,6 @@ class MyTonCore():
 
 		local.add_log("SendFile function completed successfully.", "debug")
 	#end define
-
-
-
-	#def send_boc_toncenter(self, file_path: str):
-	#	local.add_log('Start send_boc_toncenter function: ' + file_path, 'debug')
-	#	with open(file_path, "rb") as f:
-	#		boc = f.read()
-	#		boc_b64 = base64.b64encode(boc).decode("utf-8")
-	#	data = {"boc": boc_b64}
-	#	if self.GetNetworkName() == 'testnet':
-	#		url = 'https://testnet.toncenter.com/api/v2/sendBoc'
-	#	else:
-	#		url = 'https://toncenter.com/api/v2/sendBoc'
-	#	result = requests.post(url=url, json=data)
-	#	if result.status_code != 200:
-	#		local.add_log(f'Failed to send boc to toncenter: {result.content}', 'info')
-	#		return False
-	#	local.add_log('Sent boc to toncenter', 'info')
-	#	return True
 
 	def WaitTransaction(self, wallet, timeout=30):
 		local.add_log("start WaitTransaction function", "debug")
@@ -4136,7 +4118,6 @@ def GetSwapInfo():
 	return result
 #end define
 
-
 def parse_db_stats(path: str):
 	with open(path) as f:
 		lines = f.readlines()
@@ -4154,7 +4135,6 @@ def parse_db_stats(path: str):
 				result[s[0]] = {k: float(v) for k, v in items}
 	return result
 # end define
-
 
 def get_db_stats():
     result = {
@@ -4195,7 +4175,6 @@ def get_db_stats():
 
     return result
 # end define
-
 
 def GetValidatorProcessInfo():
 	pid = get_service_pid("validator")
