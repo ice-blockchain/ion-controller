@@ -183,6 +183,9 @@ def Event(name):
 		FirstNodeSettings()
 	if name == "enableVC":
 		EnableValidatorConsole()
+		from myioncore import MyTonCore
+		ton = MyTonCore()
+		ton.Event("enableVC")
 	if name == "enableLS":
 		EnableLiteServer()
 	if name == "enableDS":
