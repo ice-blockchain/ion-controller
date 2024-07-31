@@ -94,16 +94,7 @@
             "seqno": 0,
             "root_hash": "+IQOF15SLCod/+vodDCkh90I4QZ5UVNCfzRA26w6GWs=",
             "file_hash": "nDWyyDgaOUZc13u+rtNdK/vm99ai+Xd+8Xe5oHEZw7M="
-        },
-	"hardforks": [
-		{
-			"file_hash": "hcsfXMQ0z//itFarAnm01JSrBi7XcafGwsFHkafX3kU=",
-			"seqno": 2372938,
-			"root_hash": "6JSqIYIkW7y8IorxfbQBoXiuY3kXjcoYgQOxTJpjXXA=",
-			"workchain": -1,
-			"shard": -9223372036854775808
-		}
-	]	
+        }
     },
     "liteservers": [
         {
