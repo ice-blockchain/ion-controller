@@ -1,23 +1,32 @@
 #!/bin/bash
 set -e
 
-# wget this file:
-# wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/install.sh
+# colors
+COLOR='\033[92m'
+ENDC='\033[0m'
+mydir=`pwd`
 
-# Проверить sudo
+# check sudo permissions
 if [ "$(id -u)" != "0" ]; then
-	echo "Please run script as root"
-	exit 1
+    echo "Please run script as root"
+    exit 1
 fi
 
+author="ice-blockchain"
+repo="ion-controller"
+branch="ion-fork-sync"
+mode="validator"
+
 show_help_and_exit() {
-    echo 'Supported argumets:'
-    echo ' -m [lite|full]   Choose installation mode'
-    echo ' -c  PATH         Provide custom config for ioninstaller.sh'
-    echo ' -t               Disable telemetry'
-    echo ' -i               Ignore minimum reqiurements'
-    echo ' -d               Use pre-packaged dump. Reduces duration of initial synchronization.'
-    echo ' -h               Show this help'
+  echo 'Supported argumets:'
+  echo ' -c  PATH         Provide custom config for ioninstaller.sh'
+  echo ' -i               Ignore minimum reqiurements'
+  echo ' -d               Use pre-packaged dump. Reduces duration of initial synchronization.'
+  echo ' -a               Set MyIonCtrl git repo author'
+	echo ' -r               Set MyIonCtrl git repo'
+	echo ' -b               Set MyIonCtrl git repo branch'
+	echo ' -m  MODE             Install MyIonCtrl with specified mode (validator or liteserver)'
+	echo ' -h               Show this help'
     exit
 }
 
@@ -25,88 +34,99 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
     show_help_and_exit
 fi
 
-# Get arguments
-config="https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
-telemetry=true
-ignore=false
+# node install parameters
+config="https://raw.githubusercontent.com/${author}/${repo}/${branch}/config/ion-testnet-global.config.json"
+telemetry=false
+ignore=true
 dump=false
-while getopts m:c:tidh flag
+
+
+
+while getopts c:tida:r:b:m: flag
 do
 	case "${flag}" in
-		m) mode=${OPTARG};;
 		c) config=${OPTARG};;
-		t) telemetry=false;;
 		i) ignore=true;;
 		d) dump=true;;
-        h) show_help_and_exit;;
-        *)
+		a) author=${OPTARG};;
+		r) repo=${OPTARG};;
+		b) branch=${OPTARG};;
+    m) mode=${OPTARG};;
+		h) show_help_and_exit;;
+		*)
             echo "Flag -${flag} is not recognized. Aborting"
             exit 1 ;;
 	esac
 done
 
+# check machine configuration
+echo -e "${COLOR}[1/5]${ENDC} Checking system requirements"
 
-# Проверка режима установки
-if [ "${mode}" != "lite" ] && [ "${mode}" != "full" ]; then
-	echo "Run script with flag '-m lite' or '-m full'"
-	exit 1
-fi
-
-# Проверка мощностей
 cpus=$(lscpu | grep "CPU(s)" | head -n 1 | awk '{print $2}')
-memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-if [ "${mode}" = "lite" ] && [ "$ignore" = false ] && ([ "${cpus}" -lt 2 ] || [ "${memory}" -lt 2000000 ]); then
-	echo "Insufficient resources. Requires a minimum of 2 processors and 2Gb RAM."
+memory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
+
+echo "This machine has ${cpus} CPUs and ${memory}KB of Memory"
+if [ "$ignore" = false ] && ([ "${cpus}" -lt 16 ] || [ "${memory}" -lt 64000000 ]); then
+	echo "Insufficient resources. Requires a minimum of 16 processors and 64Gb RAM."
 	exit 1
 fi
-if [ "${mode}" = "full" ] && [ "$ignore" = false ] && ([ "${cpus}" -lt 8 ] || [ "${memory}" -lt 8000000 ]); then
-	echo "Insufficient resources. Requires a minimum of 8 processors and 8Gb RAM."
-	exit 1
-fi
 
-# Цвета
-COLOR='\033[92m'
-ENDC='\033[0m'
-
-# Начинаю установку mytonctrl
-echo -e "${COLOR}[1/4]${ENDC} Starting installation Ion-Controller"
-mydir=$(pwd)
-
-# На OSX нет такой директории по-умолчанию, поэтому создаем...
+echo -e "${COLOR}[2/5]${ENDC} Checking for required TON components"
 SOURCES_DIR=/usr/src
 BIN_DIR=/usr/bin
+
+# create dirs for OSX
 if [[ "$OSTYPE" =~ darwin.* ]]; then
 	SOURCES_DIR=/usr/local/src
 	BIN_DIR=/usr/local/bin
 	mkdir -p ${SOURCES_DIR}
 fi
 
-# Проверяю наличие компонентов ION
-echo -e "${COLOR}[2/4]${ENDC} Checking for required ION components"
+# check TON components
 file1=${BIN_DIR}/ion/crypto/fift
 file2=${BIN_DIR}/ion/lite-client/lite-client
 file3=${BIN_DIR}/ion/validator-engine-console/validator-engine-console
-if [ -f "${file1}" ] && [ -f "${file2}" ] && [ -f "${file3}" ]; then
-	echo "ION exist"
-	cd $SOURCES_DIR
-	rm -rf $SOURCES_DIR/ion-controller
-	git clone -b ion-fork --recursive https://github.com/ice-blockchain/ion-controller.git
-else
-	rm -f ioninstaller.sh
-	wget https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/scripts/ioninstaller.sh
-	bash ioninstaller.sh -c "${config}"
-	rm -f ioninstaller.sh
+
+if  [ ! -f "${file1}" ] || [ ! -f "${file2}" ] || [ ! -f "${file3}" ]; then
+	echo "TON does not exists, building"
+	wget https://raw.githubusercontent.com/${author}/${repo}/${branch}/scripts/ton_installer.sh -O /tmp/ton_installer.sh
+	bash /tmp/ton_installer.sh -c ${config}
 fi
 
-# Запускаю установщик myioninstaller.py
-echo -e "${COLOR}[3/4]${ENDC} Launching the myioninstaller.py"
+# Cloning mytonctrl
+echo -e "${COLOR}[3/5]${ENDC} Installing MyTonCtrl"
+echo "https://github.com/${author}/${repo}.git -> ${branch}"
+
+# remove previous installation
+cd $SOURCES_DIR
+rm -rf $SOURCES_DIR/myionctrl
+rm -rf $SOURCES_DIR/${repo}
+pip3 uninstall -y mytonctrl
+
+git clone --branch ${branch} --recursive https://github.com/${author}/${repo}.git ${repo}  # TODO: return --recursive back when fix libraries
+git config --global --add safe.directory $SOURCES_DIR/${repo}
+cd $SOURCES_DIR/${repo}
+
+pip3 install -U .  # TODO: make installation from git directly
+
+echo -e "${COLOR}[4/5]${ENDC} Running ioninstaller"
+# DEBUG
+
 parent_name=$(ps -p $PPID -o comm=)
 user=$(whoami)
 if [ "$parent_name" = "sudo" ] || [ "$parent_name" = "su" ]; then
     user=$(logname)
 fi
-python3 ${SOURCES_DIR}/ion-controller/myioninstaller.py -m ${mode} -u ${user}
+echo "User: $user"
+python3 -m mytoninstaller -u ${user} -t ${telemetry} --dump ${dump} -m ${mode}
 
-# Выход из программы
-echo -e "${COLOR}[4/4]${ENDC} Ion-Controller installation completed"
+# set migrate version
+migrate_version=1
+version_dir="/home/${user}/.local/share/myionctrl"
+version_path="${version_dir}/VERSION"
+mkdir -p ${version_dir}
+echo ${migrate_version} > ${version_path}
+chown ${user}:${user} ${version_dir} ${version_path}
+
+echo -e "${COLOR}[5/5]${ENDC} Myionctrl installation completed"
 exit 0
