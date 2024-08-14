@@ -9,7 +9,7 @@ echo "/usr/bin/python3 /usr/src/ion-controller/myionctrl.py $@" > /usr/bin/myion
 chmod +x /usr/bin/myionctrl
 
 echo "Updating mytoncore service"
-sed -i 's\-m myioncore\/usr/src/ion-controller/myioncore.py\g' /etc/systemd/system/myioncore.service
+sed -i 's\-m mytoncore\/usr/src/ion-controller/myioncore.py\g' /etc/systemd/system/myioncore.service
 systemctl daemon-reload
 systemctl restart mytoncore
 

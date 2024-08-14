@@ -292,7 +292,7 @@ def EnableValidatorConsole(local):
 
 	# Подтянуть событие в mytoncore.py
 	# cmd = "python3 {srcDir}mytonctrl/mytoncore.py -e \"enableVC\"".format(srcDir=srcDir)
-	cmd = 'python3 -m myioncore -e "enableVC"'
+	cmd = 'python3 -m mytoncore -e "enableVC"'
 	args = ["su", "-l", user, "-c", cmd]
 	subprocess.run(args)
 
