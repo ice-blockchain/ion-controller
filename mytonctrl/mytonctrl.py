@@ -1506,7 +1506,8 @@ def GetPoolData(ton, args):
 ### Start of the program
 def mytonctrl():
 	local = MyPyClass('mytonctrl.py')
-	mytoncore_local = MyPyClass('mytoncore.py')
+	os.makedirs('myioncore.py', exist_ok=True)
+	mytoncore_local = MyPyClass('myioncore.py')
 	ton = MyTonCore(mytoncore_local)
 	console = MyPyConsole()
 

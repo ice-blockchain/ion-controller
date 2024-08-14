@@ -580,7 +580,8 @@ def General(local):
 def mytoncore():
     from mypylib.mypylib import MyPyClass
 
-    local = MyPyClass('mytoncore.py')
+    os.makedirs('myioncore.py', exist_ok=True)
+    local = MyPyClass('myioncore.py')
     print('Local DB path:', local.buffer.db_path)
     Init(local)
     General(local)
