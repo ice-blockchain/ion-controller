@@ -820,6 +820,7 @@ class MyTonCore():
 			# Parse
 			status.is_working = True
 			result = self.validatorConsole.Run("getstats")
+			status.result_stats = result
 			status.unixtime = int(parse(result, "unixtime", '\n'))
 			status.masterchainblocktime = int(parse(result, "masterchainblocktime", '\n'))
 			status.stateserializermasterchainseqno = int(parse(result, "stateserializermasterchainseqno", '\n'))
@@ -915,7 +916,6 @@ class MyTonCore():
 		self.local.add_log("start GetConfig32 function", "debug")
 		config32 = dict()
 		result = self.liteClient.Run("getconfig 32")
-		local.add_log("GetConfig32 result: " + result, "debug")
 		temp = parse(result, "total:", ' ')
 		config32["totalValidators"] = 0 if temp is None else int(temp)
 		temp = parse(result, "utime_since:", ' ')
@@ -1243,6 +1243,7 @@ class MyTonCore():
 	#end define
 
 	def send_boc_toncenter(self, file_path: str):
+		return False
 		self.local.add_log('Start send_boc_toncenter function: ' + file_path, 'debug')
 		with open(file_path, "rb") as f:
 			boc = f.read()
@@ -4018,7 +4019,7 @@ class MyTonCore():
 	def GetNetworkName(self):
 		data = self.local.read_db(self.liteClient.configPath)
 		mainnet_zero_state_root_hash = "F6OpKZKqvqeFp6CQmFomXNMfMj2EnaUSOXN+Mh+wVWk="
-		testnet_zero_state_root_hash = "gj+B8wb/AmlPk1z1AhVI484rhrUpgSr2oSFIh56VoSg="
+		testnet_zero_state_root_hash = "+IQOF15SLCod/+vodDCkh90I4QZ5UVNCfzRA26w6GWs="
 		if data.validator.zero_state.root_hash == mainnet_zero_state_root_hash:
 			return "mainnet"
 		elif data.validator.zero_state.root_hash == testnet_zero_state_root_hash:

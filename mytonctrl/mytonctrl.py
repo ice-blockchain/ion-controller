@@ -709,7 +709,7 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 
 	# Disks status
 	disksLoad_data = list()
-	for key, item in disksLoadAvg.items():
+	for key, item in (dict() if isinstance(disksLoadAvg, list) else disksLoadAvg).items():
 		diskLoad1_text = bcolors.green_text(item[0])  # TODO: this variables is unused. Why?
 		diskLoad5_text = bcolors.green_text(item[1])  # TODO: this variables is unused. Why?
 		diskLoad15_text = bcolors.green_text(item[2])
@@ -724,9 +724,9 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	disksLoad_text = local.translate("local_status_disks_load").format(disksLoad_data)
 
 	# Thread status
-	mytoncoreStatus_bool = get_service_status("mytoncore")
+	mytoncoreStatus_bool = get_service_status("myioncore")
 	validatorStatus_bool = get_service_status("validator")
-	mytoncoreUptime = get_service_uptime("mytoncore")
+	mytoncoreUptime = get_service_uptime("myioncore")
 	validatorUptime = get_service_uptime("validator")
 	mytoncoreUptime_text = bcolors.green_text(time2human(mytoncoreUptime))
 	validatorUptime_text = bcolors.green_text(time2human(validatorUptime))
@@ -743,7 +743,7 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	dbStatus_text = local.translate("local_status_db").format(dbSize_text, dbUsage_text)
 	
 	# Mytonctrl and validator git hash
-	mtcGitPath = "/usr/src/myionctrl"
+	mtcGitPath = "/usr/src/ion-controller"
 	validatorGitPath = "/usr/src/ion"
 	validatorBinGitPath = "/usr/bin/ion/validator-engine/validator-engine"
 	mtcGitHash = get_git_hash(mtcGitPath, short=True)
@@ -760,6 +760,7 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	validatorVersion_text = local.translate("local_status_version_validator").format(validatorGitHash_text, validatorGitBranch_text)
 
 	color_print(local.translate("local_status_head"))
+	print(validator_status.result_stats)
 	print(validatorIndex_text)
 	print(validatorEfficiency_text)
 	print(adnlAddr_text)

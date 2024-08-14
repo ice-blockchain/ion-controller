@@ -36,7 +36,7 @@ def StartValidator(local):
 #end define
 
 def StartMytoncore(local):
-	start_service(local, "mytoncore")
+	start_service(local, "myioncore")
 #end define
 
 def get_ed25519_pubkey_text(privkey_text):

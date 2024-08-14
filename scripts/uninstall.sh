@@ -33,9 +33,16 @@ systemctl daemon-reload
 
 # Удаление файлов
 if $full; then
-	echo "removing Ton node"
+	echo "removing Ion node"
 	rm -rf /usr/src/ion
 	rm -rf /usr/bin/ion
+	rm -rf /usr/bin/fift
+	rm -rf /usr/bin/liteclient
+	rm -rf /usr/bin/lite-client
+	rm -rf /usr/bin/myionctrl
+	rm -rf /usr/bin/validator-console
+	rm -rf /usr/local/bin/myioncore
+	rm -rf /tmp/myion*
 	rm -rf /var/ion-work
 	rm -rf /var/ion-dht-server
 fi
@@ -43,15 +50,6 @@ fi
 rm -rf /usr/src/ion-controller
 rm -rf /usr/src/mtc-jsonrpc
 rm -rf /usr/src/pytonv3
-
-# Удаление ссылок
-if $full; then
-	echo "removing ton node"
-	rm -rf /usr/bin/fift
-	rm -rf /usr/bin/liteclient
-rm -rf /usr/bin/lite-client
-	rm -rf /usr/bin/validator-console
-fi
 
 # removing pip packages
 pip3 uninstall -y mytonctrl
