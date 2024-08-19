@@ -11,7 +11,7 @@ fi
 COLOR='\033[92m'
 ENDC='\033[0m'
 
-db_path=/var/ton-work/db
+db_path=/var/ion-work/db
 
 function get_directory_size {
 	buff=$(du -sh ${db_path} | awk '{print $1}')

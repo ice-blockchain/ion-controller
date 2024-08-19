@@ -34,7 +34,8 @@ def run_migrations(local: Optional[MyPyClass]=None, ton: Optional[MyTonCore]=Non
     if local is None:
         local = MyPyClass('mytonctrl.py')
     if ton is None:
-        ton = MyTonCore(MyPyClass('mytoncore.py'))
+        os.makedirs('myioncore.py', exist_ok=True)
+        ton = MyTonCore(MyPyClass('myioncore.py'))
 
     # migrations    
     version = 0

@@ -73,10 +73,10 @@ def FirstNodeSettings(local):
 	subprocess.run(args)
 
 	# Скачать дамп
-	DownloadDump(local)
+	#DownloadDump(local)
 
 	# chown 1
-	local.add_log("Chown ton-work dir", "debug")
+	local.add_log("Chown ion-work dir", "debug")
 	args = ["chown", "-R", vuser + ':' + vuser, ton_work_dir]
 	subprocess.run(args)
 
@@ -106,7 +106,7 @@ def DownloadDump(local):
 	os.system(cmd)
 
 	# download dump
-	cmd = "curl -s {url}/dumps/latest.tar.lz | pv | plzip -d -n8 | tar -xC /var/ton-work/db".format(url=url)
+	cmd = "curl -Ls {url}/dumps/latest.tar.lz | pv | plzip -d -n8 | tar -xC /var/ion-work/db".format(url=url)
 	os.system(cmd)
 #end define
 
@@ -117,16 +117,16 @@ def FirstMytoncoreSettings(local):
 
 	# Прописать mytoncore.py в автозагрузку
 	# add2systemd(name="mytoncore", user=user, start="/usr/bin/python3 /usr/src/mytonctrl/mytoncore.py")  # TODO: fix path
-	add2systemd(name="mytoncore", user=user, start="/usr/bin/python3 -m mytoncore")
+	add2systemd(name="myioncore", user=user, start="/usr/bin/python3 -m mytoncore")
 
 	# Проверить конфигурацию
-	path = "/home/{user}/.local/share/mytoncore/mytoncore.db".format(user=user)
+	path = "/home/{user}/.local/share/myioncore/myioncore.db".format(user=user)
 	if os.path.isfile(path):
 		local.add_log(f"{path} already exist. Break FirstMytoncoreSettings fuction", "warning")
 		return
 	#end if
 
-	path2 = "/usr/local/bin/mytoncore/mytoncore.db"
+	path2 = "/usr/local/bin/myioncore/myioncore.db"
 	if os.path.isfile(path2):
 		local.add_log(f"{path2}.db already exist. Break FirstMytoncoreSettings fuction", "warning")
 		return
@@ -265,7 +265,7 @@ def EnableValidatorConsole(local):
 	mconfig_path = local.buffer.mconfig_path
 	mconfig = GetConfig(path=mconfig_path)
 
-	# edit mytoncore config file
+	# edit myioncore config file
 	validatorConsole = Dict()
 	validatorConsole.appPath = ton_bin_dir + "validator-engine-console/validator-engine-console"
 	validatorConsole.privKeyPath = client_key
@@ -351,14 +351,14 @@ def EnableLiteServer(local):
 	# restart validator
 	StartValidator(local)
 
-	# edit mytoncore config file
+	# edit myioncore config file
 	# read mconfig
 	local.add_log("read mconfig", "debug")
 	mconfig_path = local.buffer.mconfig_path
 	mconfig = GetConfig(path=mconfig_path)
 
-	# edit mytoncore config file
-	local.add_log("edit mytoncore config file", "debug")
+	# edit myioncore config file
+	local.add_log("edit myioncore config file", "debug")
 	liteServer = Dict()
 	liteServer.pubkeyPath = liteserver_pubkey
 	liteServer.ip = "127.0.0.1"
@@ -381,11 +381,11 @@ def EnableDhtServer(local):
 	globalConfigPath = local.buffer.global_config_path
 	dht_server = ton_bin_dir + "dht-server/dht-server"
 	generate_random_id = ton_bin_dir + "utils/generate-random-id"
-	tonDhtServerDir = "/var/ton-dht-server/"
+	tonDhtServerDir = "/var/ion-dht-server/"
 	tonDhtKeyringDir = tonDhtServerDir + "keyring/"
 
 	# Проверить конфигурацию
-	dht_config_path = "/var/ton-dht-server/config.json"
+	dht_config_path = "/var/ion-dht-server/config.json"
 	if os.path.isfile(dht_config_path):
 		local.add_log(f"DHT-Server '{dht_config_path}' already exist. Break EnableDhtServer fuction", "warning")
 		return
@@ -529,7 +529,7 @@ def enable_ton_storage(local):
 	db_path = f"/var/{bin_name}"
 	bin_path = f"{db_path}/{bin_name}"
 	config_path = f"{db_path}/tonutils-storage-db/config.json"
-	network_config = "/usr/bin/ton/global.config.json"
+	network_config = "/usr/bin/ion/global.config.json"
 
 	installer_path = pkg_resources.resource_filename('mytoninstaller.scripts', 'ton_storage_installer.sh')
 	local.add_log(f"Running script: {installer_path}", "debug")
@@ -591,7 +591,7 @@ def enable_ton_storage_provider(local):
 	db_path = f"/var/{bin_name}"
 	bin_path = f"{db_path}/{bin_name}"
 	config_path = f"{db_path}/config.json"
-	network_config = "/usr/bin/ton/global.config.json"
+	network_config = "/usr/bin/ion/global.config.json"
 
 	installer_path = pkg_resources.resource_filename('mytoninstaller.scripts', 'ton_storage_provider_installer.sh')
 	local.add_log(f"Running script: {installer_path}", "debug")
@@ -661,7 +661,7 @@ def DangerousRecoveryValidatorConfigFile(local):
 
 	# Get keys from keyring
 	keys = list()
-	keyringDir = "/var/ton-work/db/keyring/"
+	keyringDir = "/var/ion-work/db/keyring/"
 	keyring = os.listdir(keyringDir)
 	os.chdir(keyringDir)
 	sorted(keyring, key=os.path.getmtime)
@@ -754,7 +754,7 @@ def DangerousRecoveryValidatorConfigFile(local):
 	vconfig.control = [buff]
 
 	# Get dht fragment
-	files = os.listdir("/var/ton-work/db")
+	files = os.listdir("/var/ion-work/db")
 	for item in files:
 		if item[:3] == "dht":
 			dhtS = item[4:]
@@ -800,7 +800,7 @@ def DangerousRecoveryValidatorConfigFile(local):
 
 	# Get dumps from tmp
 	dumps = list()
-	dumpsDir = "/tmp/mytoncore/"
+	dumpsDir = "/tmp/myioncore/"
 	dumpsList = os.listdir(dumpsDir)
 	os.chdir(dumpsDir)
 	sorted(dumpsList, key=os.path.getmtime)
@@ -856,7 +856,7 @@ def CreateSymlinks(local):
 	local.add_log("start CreateSymlinks fuction", "debug")
 	cport = local.buffer.cport
 
-	mytonctrl_file = "/usr/bin/mytonctrl"
+	mytonctrl_file = "/usr/bin/myionctrl"
 	fift_file = "/usr/bin/fift"
 	liteclient_file = "/usr/bin/lite-client"
 	validator_console_file = "/usr/bin/validator-console"
@@ -866,14 +866,14 @@ def CreateSymlinks(local):
 	file.write("/usr/bin/python3 -m mytonctrl $@")  # TODO: fix path
 	file.close()
 	file = open(fift_file, 'wt')
-	file.write("/usr/bin/ton/crypto/fift $@")
+	file.write("/usr/bin/ion/crypto/fift $@")
 	file.close()
 	file = open(liteclient_file, 'wt')
-	file.write("/usr/bin/ton/lite-client/lite-client -C /usr/bin/ton/global.config.json $@")
+	file.write("/usr/bin/ion/lite-client/lite-client -C /usr/bin/ion/global.config.json $@")
 	file.close()
 	if cport:
 		file = open(validator_console_file, 'wt')
-		file.write("/usr/bin/ton/validator-engine-console/validator-engine-console -k /var/ton-work/keys/client -p /var/ton-work/keys/server.pub -a 127.0.0.1:" + str(cport) + " $@")
+		file.write("/usr/bin/ion/validator-engine-console/validator-engine-console -k /var/ion-work/keys/client -p /var/ion-work/keys/server.pub -a 127.0.0.1:" + str(cport) + " $@")
 		file.close()
 		args = ["chmod", "+x", validator_console_file]
 		subprocess.run(args)
@@ -881,7 +881,7 @@ def CreateSymlinks(local):
 	subprocess.run(args)
 
 	# env
-	fiftpath = "export FIFTPATH=/usr/src/ton/crypto/fift/lib/:/usr/src/ton/crypto/smartcont/"
+	fiftpath = "export FIFTPATH=/usr/src/ion/crypto/fift/lib/:/usr/src/ion/crypto/smartcont/"
 	file = open(env_file, 'rt+')
 	text = file.read()
 	if fiftpath not in text:

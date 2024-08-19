@@ -29,7 +29,7 @@ mkdir -p /var/ton-http-api/ton_keystore/
 chown -R $user /var/ton-http-api/
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cmd="ton-http-api --port=8000 --logs-level=INFO --cdll-path=/usr/bin/ton/tonlib/libtonlibjson.so --liteserver-config /usr/bin/ton/local.config.json --tonlib-keystore=/var/ton-http-api/ton_keystore/ --parallel-requests-per-liteserver=1024"
+cmd="ton-http-api --port=8000 --logs-level=INFO --cdll-path=/usr/bin/ion/tonlib/libtonlibjson.so --liteserver-config /usr/bin/ion/local.config.json --tonlib-keystore=/var/ton-http-api/ton_keystore/ --parallel-requests-per-liteserver=1024"
 ${SCRIPT_DIR}/add2systemd.sh -n ton-http-api -s "${cmd}" -u ${user} -g ${user}
 systemctl restart ton-http-api
 

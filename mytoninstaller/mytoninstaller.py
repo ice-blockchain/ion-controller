@@ -65,7 +65,7 @@ def Init(local, console):
 		return partial(func, *args)
 
 	# Create user console
-	console.name = "MyTonInstaller"
+	console.name = "MyIonInstaller"
 	console.color = console.RED
 	console.AddItem("status", inject_globals(Status), "Print TON component status")
 	console.AddItem("set_node_argument", inject_globals(set_node_argument), "Set node argument")
@@ -84,17 +84,17 @@ def Init(local, console):
 
 def Refresh(local):
 	user = local.buffer.user
-	local.buffer.mconfig_path = "/home/{user}/.local/share/mytoncore/mytoncore.db".format(user=user)
+	local.buffer.mconfig_path = "/home/{user}/.local/share/myioncore/myioncore.db".format(user=user)
 	if user == 'root':
-		local.buffer.mconfig_path = "/usr/local/bin/mytoncore/mytoncore.db"
+		local.buffer.mconfig_path = "/usr/local/bin/myioncore/myioncore.db"
 	#end if
 
 	# create variables
 	bin_dir = "/usr/bin/"
 	src_dir = "/usr/src/"
-	ton_work_dir = "/var/ton-work/"
-	ton_bin_dir = bin_dir + "ton/"
-	ton_src_dir = src_dir + "ton/"
+	ton_work_dir = "/var/ion-work/"
+	ton_bin_dir = bin_dir + "ion/"
+	ton_src_dir = src_dir + "ion/"
 	local.buffer.bin_dir = bin_dir
 	local.buffer.src_dir = src_dir
 	local.buffer.ton_work_dir = ton_work_dir
@@ -120,7 +120,7 @@ def Status(local, args):
 
 	statuses = {
 		'Full node status': os.path.isfile(local.buffer.vconfig_path),
-		'Mytoncore status': os.path.isfile(local.buffer.mconfig_path),
+		'Myioncore status': os.path.isfile(local.buffer.mconfig_path),
 		'V.console status': os.path.isfile(server_key) or os.path.isfile(client_key),
 		'Liteserver status': os.path.isfile(liteserver_pubkey)
 	}
@@ -159,9 +159,9 @@ def Enable(local, args):
 		print("'LS' - Lite-Server")
 		print("'DS' - DHT-Server")
 		print("'JR' - jsonrpc")
-		print("'THA' - ton-http-api")
+		print("'THA' - ion-http-api")
 		print("'LSP' - ls-proxy")
-		print("'TSP' - ton-storage + ton-storage-provider")
+		print("'TSP' - ion-storage + ion-storage-provider")
 		print("Example: 'enable FN'")
 		return
 	if name == "THA":

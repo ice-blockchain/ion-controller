@@ -421,11 +421,11 @@ def Telemetry(local, ton):
 
     # Get git hashes
     gitHashes = dict()
-    mtc_path = "/usr/src/mytonctrl"
+    mtc_path = "/usr/src/ion-controller"
     local.try_function(fix_git_config, args=[mtc_path])
     gitHashes["mytonctrl"] = get_git_hash(mtc_path)
     gitHashes["validator"] = GetBinGitHash(
-        "/usr/bin/ton/validator-engine/validator-engine")
+        "/usr/bin/ion/validator-engine/validator-engine")
     data["gitHashes"] = gitHashes
     data["stake"] = local.db.get("stake")
 
@@ -580,7 +580,8 @@ def General(local):
 def mytoncore():
     from mypylib.mypylib import MyPyClass
 
-    local = MyPyClass('mytoncore.py')
+    os.makedirs('myioncore.py', exist_ok=True)
+    local = MyPyClass('myioncore.py')
     print('Local DB path:', local.buffer.db_path)
     Init(local)
     General(local)

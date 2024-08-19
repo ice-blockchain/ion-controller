@@ -12,21 +12,20 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-author="ton-blockchain"
-repo="mytonctrl"
-branch="master"
+author="ice-blockchain"
+repo="ion-controller"
+branch="ion-fork-sync"
 mode="validator"
 
 show_help_and_exit() {
   echo 'Supported argumets:'
-  echo ' -c  PATH         Provide custom config for toninstaller.sh'
-  echo ' -t               Disable telemetry'
+  echo ' -c  PATH         Provide custom config for ioninstaller.sh'
   echo ' -i               Ignore minimum reqiurements'
   echo ' -d               Use pre-packaged dump. Reduces duration of initial synchronization.'
-  echo ' -a               Set MyTonCtrl git repo author'
-	echo ' -r               Set MyTonCtrl git repo'
-	echo ' -b               Set MyTonCtrl git repo branch'
-	echo ' -m  MODE             Install MyTonCtrl with specified mode (validator or liteserver)'
+  echo ' -a               Set MyIonCtrl git repo author'
+	echo ' -r               Set MyIonCtrl git repo'
+	echo ' -b               Set MyIonCtrl git repo branch'
+	echo ' -m  MODE             Install MyIonCtrl with specified mode (validator or liteserver)'
 	echo ' -h               Show this help'
     exit
 }
@@ -36,9 +35,9 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
 fi
 
 # node install parameters
-config="https://ton-blockchain.github.io/global.config.json"
-telemetry=true
-ignore=false
+config="https://raw.githubusercontent.com/${author}/${repo}/${branch}/config/ion-testnet-global.config.json"
+telemetry=false
+ignore=true
 dump=false
 
 
@@ -47,7 +46,6 @@ while getopts c:tida:r:b:m: flag
 do
 	case "${flag}" in
 		c) config=${OPTARG};;
-		t) telemetry=false;;
 		i) ignore=true;;
 		d) dump=true;;
 		a) author=${OPTARG};;
@@ -85,9 +83,9 @@ if [[ "$OSTYPE" =~ darwin.* ]]; then
 fi
 
 # check TON components
-file1=${BIN_DIR}/ton/crypto/fift
-file2=${BIN_DIR}/ton/lite-client/lite-client
-file3=${BIN_DIR}/ton/validator-engine-console/validator-engine-console
+file1=${BIN_DIR}/ion/crypto/fift
+file2=${BIN_DIR}/ion/lite-client/lite-client
+file3=${BIN_DIR}/ion/validator-engine-console/validator-engine-console
 
 if  [ ! -f "${file1}" ] || [ ! -f "${file2}" ] || [ ! -f "${file3}" ]; then
 	echo "TON does not exists, building"
@@ -101,7 +99,8 @@ echo "https://github.com/${author}/${repo}.git -> ${branch}"
 
 # remove previous installation
 cd $SOURCES_DIR
-rm -rf $SOURCES_DIR/mytonctrl
+rm -rf $SOURCES_DIR/myionctrl
+rm -rf $SOURCES_DIR/${repo}
 pip3 uninstall -y mytonctrl
 
 git clone --branch ${branch} --recursive https://github.com/${author}/${repo}.git ${repo}  # TODO: return --recursive back when fix libraries
@@ -110,7 +109,7 @@ cd $SOURCES_DIR/${repo}
 
 pip3 install -U .  # TODO: make installation from git directly
 
-echo -e "${COLOR}[4/5]${ENDC} Running mytoninstaller"
+echo -e "${COLOR}[4/5]${ENDC} Running ioninstaller"
 # DEBUG
 
 parent_name=$(ps -p $PPID -o comm=)
@@ -123,11 +122,11 @@ python3 -m mytoninstaller -u ${user} -t ${telemetry} --dump ${dump} -m ${mode}
 
 # set migrate version
 migrate_version=1
-version_dir="/home/${user}/.local/share/mytonctrl"
+version_dir="/home/${user}/.local/share/myionctrl"
 version_path="${version_dir}/VERSION"
 mkdir -p ${version_dir}
 echo ${migrate_version} > ${version_path}
 chown ${user}:${user} ${version_dir} ${version_path}
 
-echo -e "${COLOR}[5/5]${ENDC} Mytonctrl installation completed"
+echo -e "${COLOR}[5/5]${ENDC} Myionctrl installation completed"
 exit 0

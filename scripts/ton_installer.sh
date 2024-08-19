@@ -9,7 +9,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Get arguments
-config=https://ton-blockchain.github.io/global.config.json
+config="https://raw.githubusercontent.com/github.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json"
 while getopts c: flag
 do
 	case "${flag}" in
@@ -41,7 +41,7 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
 	elif [ -f /etc/SuSE-release ]; then
 		echo "Suse Linux detected."
 		echo "This OS is not supported with this script at present. Sorry."
-		echo "Please refer to https://github.com/ton-blockchain/mytonctrl for setup information."
+		echo "Please refer to https://github.com/ice-blockchain/ion-controller/tree/ion-fork for setup information."
 		exit 1
 	elif [ -f /etc/arch-release ]; then
 		echo "Arch Linux detected."
@@ -60,7 +60,7 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
 	else
 		echo "Unknown Linux distribution."
 		echo "This OS is not supported with this script at present. Sorry."
-		echo "Please refer to https://github.com/ton-blockchain/mytonctrl for setup information."
+		echo "Please refer to https://github.com/ice-blockchain/ion-controller/tree/ion-fork for setup information."
 		exit 1
 	fi
 elif [[ "$OSTYPE" =~ darwin.* ]]; then
@@ -103,13 +103,13 @@ make build_libs -j$(nproc)
 echo -e "${COLOR}[3/6]${ENDC} Preparing for compilation"
 cd $SOURCES_DIR
 rm -rf $SOURCES_DIR/ton
-git clone --recursive https://github.com/ton-blockchain/ton.git
-git config --global --add safe.directory $SOURCES_DIR/ton
+git clone --recursive https://github.com/ice-blockchain/ion.git
+git config --global --add safe.directory $SOURCES_DIR/ion
 
 # Подготавливаем папки для компиляции
-rm -rf $BIN_DIR/ton
-mkdir $BIN_DIR/ton
-cd $BIN_DIR/ton
+rm -rf $BIN_DIR/ion
+mkdir $BIN_DIR/ion
+cd $BIN_DIR/ion
 
 # Подготовиться к компиляции
 if [[ "$OSTYPE" =~ darwin.* ]]; then
@@ -126,12 +126,12 @@ fi
 if [[ "$OSTYPE" =~ darwin.* ]]; then
 	if [[ $(uname -p) == 'arm' ]]; then
 		echo M1
-		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ton -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev
+		CC="clang -mcpu=apple-a14" CXX="clang++ -mcpu=apple-a14" cmake $SOURCES_DIR/ion -DCMAKE_BUILD_TYPE=Release -DTON_ARCH= -Wno-dev
 	else
-		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ton
+		cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ion
 	fi
 else
-	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ton -GNinja -DTON_USE_JEMALLOC=ON -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
+	cmake -DCMAKE_BUILD_TYPE=Release $SOURCES_DIR/ion -GNinja -DOPENSSL_FOUND=1 -DOPENSSL_INCLUDE_DIR=$opensslPath/include -DOPENSSL_CRYPTO_LIBRARY=$opensslPath/libcrypto.a
 fi
 
 # Расчитываем количество процессоров для сборки
@@ -158,5 +158,5 @@ echo -e "${COLOR}[5/6]${ENDC} Downloading config files"
 wget ${config} -O global.config.json
 
 # Выход из программы
-echo -e "${COLOR}[6/6]${ENDC} TON software installation complete"
+echo -e "${COLOR}[6/6]${ENDC} ION software installation complete"
 exit 0

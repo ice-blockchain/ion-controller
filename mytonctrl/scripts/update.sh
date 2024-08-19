@@ -8,9 +8,9 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Set default arguments
-author="ton-blockchain"
-repo="mytonctrl"
-branch="master"
+author="ion-blockchain"
+repo="ion-controller"
+branch="ion-fork"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
 
@@ -42,8 +42,7 @@ cd ${repo}
 pip3 install -U .
 
 systemctl daemon-reload
-systemctl restart mytoncore
 
 # Конец
-echo -e "${COLOR}[1/1]${ENDC} MyTonCtrl components update completed"
+echo -e "${COLOR}[1/1]${ENDC} Ion-Controller components update completed"
 exit 0

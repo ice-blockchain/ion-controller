@@ -42,8 +42,8 @@ setup(
 		 "License :: Other/Proprietary License",
 		 "Topic :: Software Development :: Libraries"
 	],
-	url="https://github.com/ton-blockchain/mytonctrl",
-	description="MyTonCtrl",
+	url="https://github.com/ice-blockchain/ion-controller",
+	description="MyIonCtrl",
 	long_description_content_type="text/markdown",
 	long_description=long_description,
 )

@@ -694,7 +694,7 @@ class MyTonCore():
 		#cmd = f"gethead {block}"
 		#result = self.liteClient.Run(cmd)
 		#seqno =  parse(result, "prev_key_block_seqno=", '\n')
-		statesDir = "/var/ton-work/db/archive/states"
+		statesDir = "/var/ion-work/db/archive/states"
 		os.chdir(statesDir)
 		files = filter(os.path.isfile, os.listdir(statesDir))
 		files = [os.path.join(statesDir, f) for f in files] # add path to each file
@@ -820,6 +820,7 @@ class MyTonCore():
 			# Parse
 			status.is_working = True
 			result = self.validatorConsole.Run("getstats")
+			status.result_stats = result
 			status.unixtime = int(parse(result, "unixtime", '\n'))
 			status.masterchainblocktime = int(parse(result, "masterchainblocktime", '\n'))
 			status.stateserializermasterchainseqno = int(parse(result, "stateserializermasterchainseqno", '\n'))
@@ -915,9 +916,12 @@ class MyTonCore():
 		self.local.add_log("start GetConfig32 function", "debug")
 		config32 = dict()
 		result = self.liteClient.Run("getconfig 32")
-		config32["totalValidators"] = int(parse(result, "total:", ' '))
-		config32["startWorkTime"] = int(parse(result, "utime_since:", ' '))
-		config32["endWorkTime"] = int(parse(result, "utime_until:", ' '))
+		temp = parse(result, "total:", ' ')
+		config32["totalValidators"] = 0 if temp is None else int(temp)
+		temp = parse(result, "utime_since:", ' ')
+		config32["startWorkTime"] = 0 if temp is None else int(temp)
+		temp = parse(result, "utime_until:", ' ')
+		config32["endWorkTime"] = 0 if temp is None else int(temp)
 		lines = result.split('\n')
 		validators = list()
 		for line in lines:
@@ -1239,6 +1243,7 @@ class MyTonCore():
 	#end define
 
 	def send_boc_toncenter(self, file_path: str):
+		return False
 		self.local.add_log('Start send_boc_toncenter function: ' + file_path, 'debug')
 		with open(file_path, "rb") as f:
 			boc = f.read()
@@ -2704,7 +2709,7 @@ class MyTonCore():
 	#end define
 
 	def GetDbUsage(self):
-		path = "/var/ton-work/db"
+		path = "/var/ion-work/db"
 		data = psutil.disk_usage(path)
 		return data.percent
 	#end define
@@ -2713,7 +2718,7 @@ class MyTonCore():
 		self.local.add_log("start GetDbSize function", "debug")
 		exceptions = exceptions.split()
 		totalSize = 0
-		path = "/var/ton-work/"
+		path = "/var/ion-work/"
 		for directory, subdirectory, files in os.walk(path):
 			for file in files:
 				buff = file.split('.')
@@ -3488,7 +3493,7 @@ class MyTonCore():
 		if not os.path.isfile("/usr/bin/func"):
 			return
 		#	file = open("/usr/bin/func", 'wt')
-		#	file.write("/usr/bin/ton/crypto/func $@")
+		#	file.write("/usr/bin/ion/crypto/func $@")
 		#	file.close()
 		#end if
 
@@ -4014,7 +4019,7 @@ class MyTonCore():
 	def GetNetworkName(self):
 		data = self.local.read_db(self.liteClient.configPath)
 		mainnet_zero_state_root_hash = "F6OpKZKqvqeFp6CQmFomXNMfMj2EnaUSOXN+Mh+wVWk="
-		testnet_zero_state_root_hash = "gj+B8wb/AmlPk1z1AhVI484rhrUpgSr2oSFIh56VoSg="
+		testnet_zero_state_root_hash = "+IQOF15SLCod/+vodDCkh90I4QZ5UVNCfzRA26w6GWs="
 		if data.validator.zero_state.root_hash == mainnet_zero_state_root_hash:
 			return "mainnet"
 		elif data.validator.zero_state.root_hash == testnet_zero_state_root_hash:

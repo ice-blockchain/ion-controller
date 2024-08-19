@@ -5,12 +5,12 @@ import os
 import sys
 import time
 import json
-sys.path.append("/usr/src/mytonctrl/")
+sys.path.append("/usr/src/ion-controller")
 from mypylib.mypylib import Dict
 
 def read_session_stats(need_time_period):
 	#print(f"read_session_stats: {need_time_period}")
-	file_path = "/var/ton-work/log.session-stats"
+	file_path = "/var/ion-work/log.session-stats"
 	average_block_time = calculate_average_block_time(file_path)
 	need_blocks = int(need_time_period/average_block_time)
 	

@@ -10,7 +10,7 @@ from mytoninstaller.utils import StartMytoncore, GetInitBlock, get_ed25519_pubke
 from mypylib.mypylib import ip2int, Dict
 
 
-defaultLocalConfigPath = "/usr/bin/ton/local.config.json"
+defaultLocalConfigPath = "/usr/bin/ion/local.config.json"
 
 
 def GetConfig(**kwargs):
@@ -92,7 +92,7 @@ def CreateLocalConfig(local, initBlock, localConfigPath=defaultLocalConfigPath):
 	from mytoncore import hex2base64
 
 	# read global config file
-	file = open("/usr/bin/ton/global.config.json", 'rt')
+	file = open("/usr/bin/ion/global.config.json", 'rt')
 	text = file.read()
 	data = json.loads(text)
 	file.close()

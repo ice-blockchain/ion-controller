@@ -9,7 +9,8 @@ def GetInitBlock():
 	from mypylib.mypylib import MyPyClass
 	from mytoncore import MyTonCore
 
-	mytoncore_local = MyPyClass('mytoncore.py')
+	os.makedirs('myioncore.py', exist_ok=True)
+	mytoncore_local = MyPyClass('myioncore.py')
 	ton = MyTonCore(mytoncore_local)
 	initBlock = ton.GetInitBlock()
 	return initBlock
@@ -35,7 +36,7 @@ def StartValidator(local):
 #end define
 
 def StartMytoncore(local):
-	start_service(local, "mytoncore")
+	start_service(local, "myioncore")
 #end define
 
 def get_ed25519_pubkey_text(privkey_text):

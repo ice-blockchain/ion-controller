@@ -165,7 +165,7 @@ def Init(local, ton, console, argv):
 	opts, args = getopt.getopt(argv,"hc:w:",["config=","wallets="])
 	for opt, arg in opts:
 		if opt == '-h':
-			print ('mytonctrl.py -c <configfile> -w <wallets>')
+			print ('myionctrl.py -c <configfile> -w <wallets>')
 			sys.exit()
 		elif opt in ("-c", "--config"):
 			configfile = arg
@@ -233,7 +233,7 @@ def check_installer_user(local):
 	process = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=3)
 	username = process.stdout.decode("utf-8").strip()
 
-	args = ["ls", "-lh", "/var/ton-work/keys/"]
+	args = ["ls", "-lh", "/var/ion-work/keys/"]
 	process = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=3)
 	output = process.stdout.decode("utf-8")
 	actual_user = output.split('\n')[1].split()[2]
@@ -302,7 +302,7 @@ def check_git(input_args, default_repo, text, default_branch='master'):
 	src_dir = "/usr/src"
 	git_path = f"{src_dir}/{default_repo}"
 	fix_git_config(git_path)
-	default_author = "ton-blockchain"
+	default_author = "ice-blockchain"
 
 	# Get author, repo, branch
 	local_author, local_repo = get_git_author_and_repo(git_path)
@@ -343,7 +343,7 @@ def check_branch_exists(author, repo, branch):
 #end define
 
 def Update(local, args):
-	repo = "mytonctrl"
+	repo = "ion-controller"
 	author, repo, branch = check_git(args, repo, "update")
 
 	# Run script
@@ -366,18 +366,18 @@ def Upgrade(ton, args):
 	liteClient = ton.GetSettings("liteClient")
 	configPath = liteClient.get("configPath")
 	pubkeyPath = liteClient.get("liteServer").get("pubkeyPath")
-	if "ton-lite-client-test1" in configPath:
-		liteClient["configPath"] = configPath.replace("lite-client/ton-lite-client-test1.config.json", "global.config.json")
-	if "/usr/bin/ton" in pubkeyPath:
-		liteClient["liteServer"]["pubkeyPath"] = "/var/ton-work/keys/liteserver.pub"
+	if "ion-lite-client-test1" in configPath:
+		liteClient["configPath"] = configPath.replace("lite-client/ion-lite-client-test1.config.json", "global.config.json")
+	if "/usr/bin/ion" in pubkeyPath:
+		liteClient["liteServer"]["pubkeyPath"] = "/var/ion-work/keys/liteserver.pub"
 	ton.SetSettings("liteClient", liteClient)
 	validatorConsole = ton.GetSettings("validatorConsole")
 	privKeyPath = validatorConsole.get("privKeyPath")
 	pubKeyPath = validatorConsole.get("pubKeyPath")
-	if "/usr/bin/ton" in privKeyPath:
-		validatorConsole["privKeyPath"] = "/var/ton-work/keys/client"
-	if "/usr/bin/ton" in pubKeyPath:
-		validatorConsole["pubKeyPath"] = "/var/ton-work/keys/server.pub"
+	if "/usr/bin/ion" in privKeyPath:
+		validatorConsole["privKeyPath"] = "/var/ion-work/keys/client"
+	if "/usr/bin/ion" in pubKeyPath:
+		validatorConsole["pubKeyPath"] = "/var/ion-work/keys/server.pub"
 	ton.SetSettings("validatorConsole", validatorConsole)
 
 	# Run script
@@ -709,7 +709,7 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 
 	# Disks status
 	disksLoad_data = list()
-	for key, item in disksLoadAvg.items():
+	for key, item in (dict() if isinstance(disksLoadAvg, list) else disksLoadAvg).items():
 		diskLoad1_text = bcolors.green_text(item[0])  # TODO: this variables is unused. Why?
 		diskLoad5_text = bcolors.green_text(item[1])  # TODO: this variables is unused. Why?
 		diskLoad15_text = bcolors.green_text(item[2])
@@ -724,9 +724,9 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	disksLoad_text = local.translate("local_status_disks_load").format(disksLoad_data)
 
 	# Thread status
-	mytoncoreStatus_bool = get_service_status("mytoncore")
+	mytoncoreStatus_bool = get_service_status("myioncore")
 	validatorStatus_bool = get_service_status("validator")
-	mytoncoreUptime = get_service_uptime("mytoncore")
+	mytoncoreUptime = get_service_uptime("myioncore")
 	validatorUptime = get_service_uptime("validator")
 	mytoncoreUptime_text = bcolors.green_text(time2human(mytoncoreUptime))
 	validatorUptime_text = bcolors.green_text(time2human(validatorUptime))
@@ -743,9 +743,9 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	dbStatus_text = local.translate("local_status_db").format(dbSize_text, dbUsage_text)
 	
 	# Mytonctrl and validator git hash
-	mtcGitPath = "/usr/src/mytonctrl"
-	validatorGitPath = "/usr/src/ton"
-	validatorBinGitPath = "/usr/bin/ton/validator-engine/validator-engine"
+	mtcGitPath = "/usr/src/ion-controller"
+	validatorGitPath = "/usr/src/ion"
+	validatorBinGitPath = "/usr/bin/ion/validator-engine/validator-engine"
 	mtcGitHash = get_git_hash(mtcGitPath, short=True)
 	validatorGitHash = GetBinGitHash(validatorBinGitPath, short=True)
 	fix_git_config(mtcGitPath)
@@ -760,6 +760,7 @@ def PrintLocalStatus(local, adnlAddr, validatorIndex, validatorEfficiency, valid
 	validatorVersion_text = local.translate("local_status_version_validator").format(validatorGitHash_text, validatorGitBranch_text)
 
 	color_print(local.translate("local_status_head"))
+	print(validator_status.result_stats)
 	print(validatorIndex_text)
 	print(validatorEfficiency_text)
 	print(adnlAddr_text)
@@ -1506,7 +1507,8 @@ def GetPoolData(ton, args):
 ### Start of the program
 def mytonctrl():
 	local = MyPyClass('mytonctrl.py')
-	mytoncore_local = MyPyClass('mytoncore.py')
+	os.makedirs('myioncore.py', exist_ok=True)
+	mytoncore_local = MyPyClass('myioncore.py')
 	ton = MyTonCore(mytoncore_local)
 	console = MyPyConsole()
 

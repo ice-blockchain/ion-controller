@@ -35,13 +35,13 @@ cd /usr/src/pytonv3
 python3 setup.py install
 
 # Скомпилировать недостающий бинарник
-cd /usr/bin/ton && make tonlibjson
+cd /usr/bin/ion && make tonlibjson
 
 # Прописать автозагрузку
 echo -e "${COLOR}[3/4]${ENDC} Add to startup"
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 echo "Script dir: ${SCRIPT_DIR}"
-${SCRIPT_DIR}/add2systemd -n pytonv3 -s "/usr/bin/python3 -m pyTON --liteserverconfig /usr/bin/ton/local.config.json --libtonlibjson /usr/bin/ton/tonlib/libtonlibjson.so" -u ${user} -g ${user}
+${SCRIPT_DIR}/add2systemd -n pytonv3 -s "/usr/bin/python3 -m pyTON --liteserverconfig /usr/bin/ion/local.config.json --libtonlibjson /usr/bin/ion/tonlib/libtonlibjson.so" -u ${user} -g ${user}
 systemctl restart pytonv3
 
 # Конец

@@ -8,8 +8,8 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Set default arguments
-author="ton-blockchain"
-repo="ton"
+author="ion-blockchain"
+repo="ion"
 branch="master"
 srcdir="/usr/src/"
 bindir="/usr/bin/"
@@ -32,16 +32,16 @@ ENDC='\033[0m'
 apt-get install -y libsecp256k1-dev libsodium-dev ninja-build fio rocksdb-tools liblz4-dev libjemalloc-dev
 
 # bugfix if the files are in the wrong place
-wget "https://ton-blockchain.github.io/global.config.json" -O global.config.json
-if [ -f "/var/ton-work/keys/liteserver.pub" ]; then
+wget "https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json" -O global.config.json
+if [ -f "/var/ion-work/keys/liteserver.pub" ]; then
     echo "Ok"
 else
 	echo "bugfix"
-	mkdir /var/ton-work/keys
-    cp /usr/bin/ton/validator-engine-console/client /var/ton-work/keys/client
-    cp /usr/bin/ton/validator-engine-console/client.pub /var/ton-work/keys/client.pub
-    cp /usr/bin/ton/validator-engine-console/server.pub /var/ton-work/keys/server.pub
-    cp /usr/bin/ton/validator-engine-console/liteserver.pub /var/ton-work/keys/liteserver.pub
+	mkdir /var/ion-work/keys
+    cp /usr/bin/ion/validator-engine-console/client /var/ion-work/keys/client
+    cp /usr/bin/ion/validator-engine-console/client.pub /var/ion-work/keys/client.pub
+    cp /usr/bin/ion/validator-engine-console/server.pub /var/ion-work/keys/server.pub
+    cp /usr/bin/ion/validator-engine-console/liteserver.pub /var/ion-work/keys/liteserver.pub
 
 	# fix validator.service
 	sed -i 's/validator-engine\/ton-global.config.json/global.config.json/' /etc/systemd/system/validator.service

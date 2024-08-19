@@ -7,17 +7,17 @@ import os
 import sys
 import subprocess
 
-requirements_path = "/usr/src/mytonctrl/requirements.txt"
+requirements_path = "/usr/src/ion-controller/requirements.txt"
 if os.path.isfile(requirements_path):
     args = ["pip3", "install", "-r", requirements_path]
     subprocess.run(args)
 #end if
 
-sys.path.insert(0, '/usr/bin/mytonctrl')  # Add path to mytonctrl module
+sys.path.insert(0, '/usr/bin/myionctrl')  # Add path to mytonctrl module
 
 
 from mytonctrl.mytonctrl import run_migrations
 
 if __name__ == '__main__':
-    print('Found new version of mytonctrl! Migrating!')
+    print('Found new version of myionctrl! Migrating!')
     run_migrations()
